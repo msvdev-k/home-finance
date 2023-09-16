@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.msvdev.homefinance.component.file.DataFileProvider;
+import ru.msvdev.homefinance.data.db.DataFileProvider;
 import ru.msvdev.homefinance.stage.MainAppStage;
 import ru.msvdev.homefinance.component.SceneLoader;
 import ru.msvdev.homefinance.component.TaskExecutor;

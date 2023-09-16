@@ -4,7 +4,7 @@ import lombok.NonNull;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.msvdev.homefinance.component.file.RepositoryFactoryUpdateListener;
+import ru.msvdev.homefinance.data.db.RepositoryFactoryUpdateListener;
 import ru.msvdev.homefinance.data.entity.ExpenseEntity;
 import ru.msvdev.homefinance.data.exception.NotFoundException;
 import ru.msvdev.homefinance.data.repository.ExpenseRepository;
