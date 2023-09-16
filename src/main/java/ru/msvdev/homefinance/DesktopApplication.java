@@ -8,7 +8,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import ru.msvdev.homefinance.data.db.DataFileProvider;
 import ru.msvdev.homefinance.window.MainAppStage;
 import ru.msvdev.homefinance.window.SceneLoader;
-import ru.msvdev.homefinance.component.TaskExecutor;
+import ru.msvdev.homefinance.task.operation.TaskExecutor;
 import ru.msvdev.homefinance.config.ApplicationConfig;
 import ru.msvdev.homefinance.config.AppProperty;
 
