@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+
+<Menu xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ru.msvdev.homefinance.controller.menu.HelpMenuController"
+      text="Справки">
+
+    <MenuItem text="О программе"/>
+
+</Menu>
