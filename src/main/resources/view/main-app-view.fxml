@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="ru.msvdev.homefinance.controller.MainAppController"
+            prefHeight="600.0" prefWidth="384.0">
+    <top>
+        <MenuBar>
+            <fx:include source="menu/file-menu.fxml"/>
+            <fx:include source="menu/finance-menu.fxml"/>
+            <fx:include source="menu/help-menu.fxml"/>
+        </MenuBar>
+    </top>
+
+    <center>
+        <fx:include source="center-app-view.fxml" VBox.vgrow="ALWAYS"/>
+    </center>
+
+</BorderPane>
