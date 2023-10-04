@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<Menu xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ru.msvdev.homefinance.controller.menu.FinanceMenuController"
+      fx:id="financeMenu"
+      text="Управление финансами"
+      visible="false">
+
+    <MenuItem text="Добавить расходы..." onAction="#addExpensesAction"/>
+    <MenuItem text="Список расходов..." onAction="#expensesListAction"/>
+
+    <SeparatorMenuItem/>
+
+    <MenuItem text="Статистика..." onAction="#statisticsAction"/>
+
+    <SeparatorMenuItem/>
+
+    <MenuItem text="Категории расходов..." onAction="#categoryManagementAction"/>
+</Menu>
