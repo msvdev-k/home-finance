@@ -1,8 +1,8 @@
-package ru.msvdev.homefinance.controller.utility.category.table.columnbuilder;
+package ru.msvdev.homefinance.widget.table.category.columnbuilder;
 
-import ru.msvdev.homefinance.controller.utility.category.table.CategoryRowModel;
-import ru.msvdev.homefinance.controller.utility.category.table.editevent.DescriptionEditEvent;
-import ru.msvdev.homefinance.controller.utility.category.table.valuefactory.DescriptionCellValueFactory;
+import ru.msvdev.homefinance.widget.table.category.CategoryRowModel;
+import ru.msvdev.homefinance.widget.table.category.editevent.DescriptionEditEvent;
+import ru.msvdev.homefinance.widget.table.category.valuefactory.DescriptionCellValueFactory;
 import ru.msvdev.homefinance.viewutils.table.BaseColumnBuilder;
 import ru.msvdev.homefinance.viewutils.table.cell.StringCellModel;
 import ru.msvdev.homefinance.viewutils.table.converter.StringStringConverter;

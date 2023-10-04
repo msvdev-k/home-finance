@@ -20,11 +20,6 @@ public abstract class CellModel<T> {
     }
 
 
-    public void setValue(T value) {
-        this.value = value;
-        this.warning = CellWarning.NO_SYNC;
-    }
-
     public void resetWarning() {
         warning = null;
     }

@@ -28,9 +28,19 @@ public abstract class TableController<V, K> {
     }
 
 
-    abstract public void initTable();
+    public void initTable() {
+        rows.clear();
+        newRow = null;
 
-    abstract public void refresh();
+        tableView.getColumns().clear();
+    }
+
+    public void refresh() {
+        rows.clear();
+        newRow = null;
+
+        tableView.getItems().clear();
+    }
 
     abstract public void newRow();
 

@@ -1,9 +1,9 @@
-package ru.msvdev.homefinance.controller.utility.category.table.valuefactory;
+package ru.msvdev.homefinance.widget.table.category.valuefactory;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
-import ru.msvdev.homefinance.controller.utility.category.table.CategoryRowModel;
+import ru.msvdev.homefinance.widget.table.category.CategoryRowModel;
 import ru.msvdev.homefinance.viewutils.table.cell.StringCellModel;
 
 
