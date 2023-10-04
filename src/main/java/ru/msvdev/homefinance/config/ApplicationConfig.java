@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @Configuration
-@EnableTransactionManagement
 @ComponentScan({"ru.msvdev.homefinance"})
+@EnableTransactionManagement(proxyTargetClass = true)
 public class ApplicationConfig {
 }
