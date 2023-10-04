@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<Menu xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ru.msvdev.homefinance.controller.menu.FileMenuController"
+      text="Файл">
+
+    <MenuItem fx:id="newMenuItem" text="Создать..." onAction="#newFileAction"/>
+    <MenuItem fx:id="openMenuItem" text="Открыть..." onAction="#openFileAction"/>
+    <MenuItem fx:id="closeMenuItem" text="Закрыть" onAction="#closeFileAction" disable="true"/>
+
+    <SeparatorMenuItem/>
+
+    <Menu fx:id="exportMenu" text="Экспорт">
+        <MenuItem text="Из файла HomeBank..."/>
+    </Menu>
+
+    <SeparatorMenuItem/>
+
+    <MenuItem text="Выход" onAction="#exitAction"/>
+</Menu>
