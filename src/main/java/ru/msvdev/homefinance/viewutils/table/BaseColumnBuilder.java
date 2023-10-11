@@ -13,6 +13,7 @@ public class BaseColumnBuilder<S, T extends CellModel<?>> {
 
     private String name;
     private double prefWidth;
+    private boolean editable;
     private Callback<TableColumn.CellDataFeatures<S, T>, ObservableValue<T>> cellValueFactory;
     private StringConverter<T> converter;
     private EditEvent<S, T> editEvent;
@@ -21,6 +22,7 @@ public class BaseColumnBuilder<S, T extends CellModel<?>> {
     public TableColumn<S, T> build() {
         TableColumn<S, T> column = new TableColumn<>(name);
         column.setPrefWidth(prefWidth);
+        column.setEditable(editable);
 
         column.setCellValueFactory(cellValueFactory);
 
