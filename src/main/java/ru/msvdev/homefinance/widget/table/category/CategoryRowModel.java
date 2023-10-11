@@ -5,29 +5,23 @@ import javafx.beans.property.SimpleObjectProperty;
 import ru.msvdev.homefinance.data.entity.CategoryEntity;
 import ru.msvdev.homefinance.task.data.category.NewCategoryTaskBuilder;
 import ru.msvdev.homefinance.task.data.category.UpdateCategoryTaskBuilder;
-import ru.msvdev.homefinance.task.operation.TaskBuilder;
 import ru.msvdev.homefinance.viewutils.table.cell.CellModel;
 import ru.msvdev.homefinance.viewutils.table.cell.StringCellModel;
+import ru.msvdev.homefinance.viewutils.table.RowModel;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
 
 
-public class CategoryRowModel {
+public class CategoryRowModel extends RowModel<CategoryRowModel, Integer> {
 
     private Set<String> categories;
-    private Consumer<CategoryRowModel> rowSaveListener;
-    private TaskBuilder taskBuilder;
-
-    private final ObjectProperty<Integer> id;
 
     private final ObjectProperty<StringCellModel> category;
     private final ObjectProperty<StringCellModel> description;
 
 
     {
-        id = new SimpleObjectProperty<>();
         category = new SimpleObjectProperty<>();
         description = new SimpleObjectProperty<>();
     }
@@ -50,16 +44,8 @@ public class CategoryRowModel {
     }
 
 
-    public void setRowSaveListener(Consumer<CategoryRowModel> rowSaveListener) {
-        this.rowSaveListener = rowSaveListener;
-    }
-
     public void setCategories(Set<String> categories) {
         this.categories = categories;
-    }
-
-    public void setTaskBuilder(TaskBuilder taskBuilder) {
-        this.taskBuilder = taskBuilder;
     }
 
 
@@ -94,13 +80,9 @@ public class CategoryRowModel {
         descriptionCellModel.setValue(entity.getDescription());
         description.setValue(descriptionCellModel);
 
-        rowSaveListener.accept(this);
+        saveRowEventListener.accept(this);
     }
 
-
-    public ObjectProperty<Integer> idProperty() {
-        return id;
-    }
 
     public ObjectProperty<StringCellModel> categoryProperty() {
         return category;

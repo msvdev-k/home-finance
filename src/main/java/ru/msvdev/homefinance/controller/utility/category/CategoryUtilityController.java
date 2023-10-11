@@ -77,7 +77,7 @@ public class CategoryUtilityController implements Initializable, ShowUtilityWind
 
     @FXML
     public void addItem(ActionEvent actionEvent) {
-        tableController.newRow();
+        tableController.addNewRow();
     }
 
     @FXML

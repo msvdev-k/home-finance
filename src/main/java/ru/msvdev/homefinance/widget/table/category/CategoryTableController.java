@@ -59,7 +59,7 @@ public class CategoryTableController extends TableController<CategoryRowModel, I
 
         rowModel.setCategories(categories);
         rowModel.setTaskBuilder(taskBuilder);
-        rowModel.setRowSaveListener(this::saveRowListener);
+        rowModel.setSaveRowEventListener(this::saveRowEventListener);
 
         return rowModel;
     }
@@ -82,12 +82,6 @@ public class CategoryTableController extends TableController<CategoryRowModel, I
         }
     }
 
-    private void saveRowListener(CategoryRowModel rowModel) {
-        if (rowModel == newRow) {
-            newRow = null;
-            rows.put(rowModel.idProperty().get(), rowModel);
-        }
-    }
 
     @Override
     public void refresh() {
@@ -100,7 +94,7 @@ public class CategoryTableController extends TableController<CategoryRowModel, I
     }
 
     @Override
-    public void newRow() {
+    public void addNewRow() {
         if (newRow == null) {
             newRow = getNewRow();
             tableView.getItems().add(newRow);
