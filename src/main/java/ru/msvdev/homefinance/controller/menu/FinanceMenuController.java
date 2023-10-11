@@ -4,12 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import ru.msvdev.homefinance.controller.DataAccessListener;
 import ru.msvdev.homefinance.controller.utility.category.CategoryUtilityController;
-import ru.msvdev.homefinance.task.operation.TaskBuilder;
-import ru.msvdev.homefinance.window.MainAppStage;
+import ru.msvdev.homefinance.controller.utility.expenses.AddExpensesUtilityController;
 
 import java.io.IOException;
 
@@ -20,9 +18,7 @@ public class FinanceMenuController implements DataAccessListener {
 
 
     private final CategoryUtilityController categoryUtilityController;
-    private final ApplicationContext ctx;
-    private final MainAppStage mainAppStage;
-    private final TaskBuilder taskBuilder;
+    private final AddExpensesUtilityController addExpensesUtilityController;
 
     @FXML
     private Menu financeMenu;
@@ -35,8 +31,8 @@ public class FinanceMenuController implements DataAccessListener {
 
 
     @FXML
-    public void addExpensesAction(ActionEvent actionEvent) {
-
+    public void addExpensesAction(ActionEvent actionEvent) throws IOException {
+        addExpensesUtilityController.show();
     }
 
     @FXML
