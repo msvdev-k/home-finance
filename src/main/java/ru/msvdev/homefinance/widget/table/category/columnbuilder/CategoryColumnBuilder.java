@@ -13,6 +13,7 @@ public class CategoryColumnBuilder extends BaseColumnBuilder<CategoryRowModel, S
     public CategoryColumnBuilder() {
         setName("Название");
         setPrefWidth(400);
+        setEditable(true);
         setCellValueFactory(new CategoryCellValueFactory());
         setConverter(new StringStringConverter());
         setEditEvent(new CategoryEditEvent());

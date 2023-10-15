@@ -13,6 +13,7 @@ public class DescriptionColumnBuilder extends BaseColumnBuilder<CategoryRowModel
     public DescriptionColumnBuilder() {
         setName("Описание");
         setPrefWidth(600);
+        setEditable(true);
         setCellValueFactory(new DescriptionCellValueFactory());
         setConverter(new StringStringConverter());
         setEditEvent(new DescriptionEditEvent());
