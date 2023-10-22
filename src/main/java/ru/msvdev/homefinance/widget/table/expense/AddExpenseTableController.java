@@ -14,8 +14,11 @@ import ru.msvdev.homefinance.widget.table.expense.columnbuilder.CategoryColumnBu
 import ru.msvdev.homefinance.widget.table.expense.columnbuilder.CostColumnBuilder;
 import ru.msvdev.homefinance.widget.table.expense.columnbuilder.DateColumnBuilder;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 
@@ -27,6 +30,7 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
     private TableColumn<ExpenseRowModel, StringCellModel> categoryColumn;
     private TableColumn<ExpenseRowModel, MoneyCellModel> costColumn;
 
+    private BiConsumer<Integer, BigDecimal> statisticListener;
 
     public AddExpenseTableController(TaskBuilder taskBuilder) {
         super(taskBuilder);
@@ -37,6 +41,9 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
     public void initTable() {
         super.initTable();
         refreshCategoryEntityMap();
+
+        tableView.getSelectionModel().setCellSelectionEnabled(true);
+        tableView.setEditable(true);
 
         DateColumnBuilder dateColumnBuilder = new DateColumnBuilder();
         dateColumn = dateColumnBuilder.build();
@@ -50,6 +57,8 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
         tableView.getColumns().add(dateColumn);
         tableView.getColumns().add(categoryColumn);
         tableView.getColumns().add(costColumn);
+
+        addNewRow();
     }
 
 
@@ -59,6 +68,13 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
         rowModel.setTaskBuilder(taskBuilder);
         rowModel.setCategoryEntityMap(categoryEntityMap);
         rowModel.setSaveRowEventListener(this::saveRowEventListener);
+
+        if (savedNewRow != null) {
+            rowModel.setDate(savedNewRow.dateProperty().get().getValue());
+            rowModel.setCategory(savedNewRow.categoryProperty().get().getValue());
+        } else {
+            rowModel.setDate(LocalDate.now());
+        }
 
         return rowModel;
     }
@@ -75,10 +91,8 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
     @Override
     protected void saveRowEventListener(ExpenseRowModel rowModel) {
         super.saveRowEventListener(rowModel);
-        if (newRow == null) {
-            addNewRow();
-            return;
-        }
+        updateStatistic();
+        if (newRow == null) addNewRow();
     }
 
     @Override
@@ -109,6 +123,7 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
         for (ExpenseRowModel item : selectedItems) {
             if (item == newRow) {
                 newRow = null;
+                savedNewRow = null;
                 tableView.getItems().remove(item);
                 addNewRow();
                 continue;
@@ -120,6 +135,19 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
         }
     }
 
+    public void setStatisticListener(BiConsumer<Integer, BigDecimal> statisticListener) {
+        this.statisticListener = statisticListener;
+    }
+
+    private void updateStatistic() {
+        if (statisticListener != null) {
+            BigDecimal summ = BigDecimal.ZERO;
+            for (ExpenseRowModel row : rows.values()) {
+                summ = summ.add(row.costProperty().get().getValue());
+            }
+            statisticListener.accept(rows.size(), summ);
+        }
+    }
 
     private class DeleteRowListener implements Consumer<Void> {
         private final ExpenseRowModel rowModel;
@@ -132,6 +160,7 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
         public void accept(Void unused) {
             tableView.getItems().remove(rowModel);
             rows.remove(rowModel.idProperty().get());
+            updateStatistic();
         }
     }
 }

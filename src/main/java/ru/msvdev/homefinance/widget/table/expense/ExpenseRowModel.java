@@ -74,7 +74,8 @@ public class ExpenseRowModel extends RowModel<ExpenseRowModel, Integer> {
             builder.setDate(date.get().getValue());
             builder.setCategory(categoryEntityMap.get(category.get().getValue()));
             builder.setCost(cost.get().getValue());
-            builder.setState(check.get().getValue() ? ExpenseEntity.State.APPROVED : ExpenseEntity.State.NOT_APPROVED);
+            Boolean isCheck = check.get().getValue();
+            builder.setState(isCheck != null && isCheck ? ExpenseEntity.State.APPROVED : ExpenseEntity.State.NOT_APPROVED);
             builder.addSucceededListener(this::succeededListener);
             builder.buildAndRun();
 
