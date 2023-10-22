@@ -12,6 +12,7 @@ public abstract class TableController<ROW extends RowModel<?, ID>, ID> {
 
     protected final Map<ID, ROW> rows;
     protected ROW newRow;
+    protected ROW savedNewRow;
 
     protected TableView<ROW> tableView;
 
@@ -44,6 +45,7 @@ public abstract class TableController<ROW extends RowModel<?, ID>, ID> {
 
     protected void saveRowEventListener(ROW rowModel) {
         if (rowModel == newRow) {
+            savedNewRow = newRow;
             newRow = null;
             rows.put(rowModel.idProperty().get(), rowModel);
         }

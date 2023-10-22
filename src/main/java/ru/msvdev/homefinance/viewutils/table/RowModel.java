@@ -7,7 +7,7 @@ import ru.msvdev.homefinance.task.operation.TaskBuilder;
 import java.util.function.Consumer;
 
 
-public abstract class RowModel<ROW extends RowModel<?, ID>, ID> {
+public abstract class RowModel<ROW extends RowModel<? super ROW, ID>, ID> {
 
     protected TaskBuilder taskBuilder;
     protected Consumer<ROW> saveRowEventListener;

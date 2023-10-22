@@ -7,6 +7,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
+import org.controlsfx.control.textfield.TextFields;
 import ru.msvdev.homefinance.viewutils.table.cell.*;
 import ru.msvdev.homefinance.viewutils.table.converter.StringConverter;
 
@@ -84,6 +85,10 @@ public class BaseTableCell<S, T extends CellModel<?>> extends TableCell<S, T> {
         TextField textField = (TextField) editNode;
         textField.setText(converter.toString(item));
         textField.selectAll();
+
+        if (item instanceof StringCellModel && ((StringCellModel) item).getValidValues() != null) {
+            TextFields.bindAutoCompletion(textField, ((StringCellModel) item).getValidValues());
+        }
 
         return textField;
     }
