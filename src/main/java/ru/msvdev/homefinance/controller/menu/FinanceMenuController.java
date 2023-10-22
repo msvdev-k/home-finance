@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import ru.msvdev.homefinance.controller.DataAccessListener;
 import ru.msvdev.homefinance.controller.utility.category.CategoryUtilityController;
 import ru.msvdev.homefinance.controller.utility.expenses.AddExpensesUtilityController;
+import ru.msvdev.homefinance.controller.utility.expenses.ExpensesUtilityController;
 
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ public class FinanceMenuController implements DataAccessListener {
 
     private final CategoryUtilityController categoryUtilityController;
     private final AddExpensesUtilityController addExpensesUtilityController;
+    private final ExpensesUtilityController expensesUtilityController;
 
     @FXML
     private Menu financeMenu;
@@ -36,8 +38,8 @@ public class FinanceMenuController implements DataAccessListener {
     }
 
     @FXML
-    public void expensesListAction(ActionEvent actionEvent) {
-
+    public void expensesListAction(ActionEvent actionEvent) throws IOException {
+        expensesUtilityController.show();
     }
 
     public void statisticsAction(ActionEvent actionEvent) {

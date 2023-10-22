@@ -32,6 +32,7 @@ public abstract class TableController<ROW extends RowModel<?, ID>, ID> {
     public void initTable() {
         rows.clear();
         newRow = null;
+        savedNewRow = null;
 
         tableView.getColumns().clear();
     }
@@ -39,6 +40,7 @@ public abstract class TableController<ROW extends RowModel<?, ID>, ID> {
     public void refresh() {
         rows.clear();
         newRow = null;
+        savedNewRow = null;
 
         tableView.getItems().clear();
     }

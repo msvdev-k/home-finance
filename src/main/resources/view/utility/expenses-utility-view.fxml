@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ru.msvdev.homefinance.controller.utility.expenses.ExpensesUtilityController"
+      prefHeight="800.0"
+      prefWidth="600.0"
+      spacing="5.0">
+
+    <HBox prefWidth="210.0" spacing="5.0">
+        <Button fx:id="deleteButton" onAction="#deleteItem" text="Удалить"/>
+        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+            <Label fx:id="statistic" text="Выделено 0 записей на сумму 0 рублей"/>
+        </HBox>
+    </HBox>
+
+    <TableView fx:id="expensesTable" VBox.vgrow="ALWAYS"/>
+
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
+</VBox>
