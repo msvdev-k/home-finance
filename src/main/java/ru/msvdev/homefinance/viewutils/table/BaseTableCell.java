@@ -86,8 +86,8 @@ public class BaseTableCell<S, T extends CellModel<?>> extends TableCell<S, T> {
         textField.setText(converter.toString(item));
         textField.selectAll();
 
-        if (item instanceof StringCellModel && ((StringCellModel) item).getValidValues() != null) {
-            TextFields.bindAutoCompletion(textField, ((StringCellModel) item).getValidValues());
+        if (item instanceof StringCellModel && ((StringCellModel) item).getCompletionValues() != null) {
+            TextFields.bindAutoCompletion(textField, ((StringCellModel) item).getCompletionValues());
         }
 
         return textField;

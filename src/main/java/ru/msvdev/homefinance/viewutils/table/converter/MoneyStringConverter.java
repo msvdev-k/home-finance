@@ -26,7 +26,8 @@ public class MoneyStringConverter extends StringConverter<MoneyCellModel> {
         }
 
         try {
-            BigDecimal value = new BigDecimal(string);
+            String tmpString = string.replace(",", ".");
+            BigDecimal value = new BigDecimal(tmpString);
             if (value.compareTo(BigDecimal.ZERO) >= 0) {
                 cellModel.setValue(value);
             }

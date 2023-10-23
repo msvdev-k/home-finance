@@ -11,9 +11,9 @@ import java.util.Set;
 public class StringCellModel extends CellModel<String> implements Cloneable {
 
     /**
-     * Множество допустимых значения
+     * Множество значений для автодополнения
      */
-    private Set<String> validValues;
+    private Set<String> completionValues;
 
     @Override
     public StringCellModel clone() {
