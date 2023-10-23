@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public class AddExpensesUtilityController implements Initializable, ShowUtilityWindow {
 
-    private static final String STATISTIC_LABEL_TEMPLATE = "%d записей на сумму %f рублей";
+    private static final String STATISTIC_LABEL_TEMPLATE = "Добавлено %d записей на сумму %s рублей";
 
     private final MainAppStage mainAppStage;
     private final SceneLoader sceneLoader;

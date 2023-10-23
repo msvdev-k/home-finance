@@ -21,6 +21,8 @@ public class NewExpenseTaskBuilder extends BaseExpenseTaskBuilder<ExpenseEntity>
     private BigDecimal cost;
     @Setter
     private ExpenseEntity.State state;
+    @Setter
+    private String note;
 
 
     public NewExpenseTaskBuilder(ApplicationContext ctx) {
@@ -51,6 +53,7 @@ public class NewExpenseTaskBuilder extends BaseExpenseTaskBuilder<ExpenseEntity>
             entity.setCategory(category);
             entity.setCost(cost);
             entity.setState(state);
+            entity.setNote(note);
 
             return expenseService.newExpense(entity);
         }

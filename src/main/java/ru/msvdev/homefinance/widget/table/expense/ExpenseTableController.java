@@ -14,10 +14,7 @@ import ru.msvdev.homefinance.viewutils.table.cell.BooleanCellModel;
 import ru.msvdev.homefinance.viewutils.table.cell.DateCellModel;
 import ru.msvdev.homefinance.viewutils.table.cell.MoneyCellModel;
 import ru.msvdev.homefinance.viewutils.table.cell.StringCellModel;
-import ru.msvdev.homefinance.widget.table.expense.columnbuilder.CategoryColumnBuilder;
-import ru.msvdev.homefinance.widget.table.expense.columnbuilder.CheckColumnBuilder;
-import ru.msvdev.homefinance.widget.table.expense.columnbuilder.CostColumnBuilder;
-import ru.msvdev.homefinance.widget.table.expense.columnbuilder.DateColumnBuilder;
+import ru.msvdev.homefinance.widget.table.expense.columnbuilder.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -50,12 +47,16 @@ public class ExpenseTableController extends TableController<ExpenseRowModel, Int
         CostColumnBuilder costColumnBuilder = new CostColumnBuilder();
         TableColumn<ExpenseRowModel, MoneyCellModel> costColumn = costColumnBuilder.build();
 
+        NoteColumnBuilder noteColumnBuilder = new NoteColumnBuilder();
+        TableColumn<ExpenseRowModel, StringCellModel> noteColumn = noteColumnBuilder.build();
+
         CheckColumnBuilder checkColumnBuilder = new CheckColumnBuilder();
         TableColumn<ExpenseRowModel, BooleanCellModel> checkColumn = checkColumnBuilder.build();
 
         tableView.getColumns().add(dateColumn);
         tableView.getColumns().add(categoryColumn);
         tableView.getColumns().add(costColumn);
+        tableView.getColumns().add(noteColumn);
         tableView.getColumns().add(checkColumn);
 
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

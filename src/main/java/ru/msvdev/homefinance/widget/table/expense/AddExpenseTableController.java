@@ -3,8 +3,10 @@ package ru.msvdev.homefinance.widget.table.expense;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import ru.msvdev.homefinance.data.entity.CategoryEntity;
+import ru.msvdev.homefinance.data.entity.ExpenseEntity;
 import ru.msvdev.homefinance.task.data.category.FindAllCategoriesTaskBuilder;
 import ru.msvdev.homefinance.task.data.expense.DeleteExpenseByIdTaskBuilder;
+import ru.msvdev.homefinance.task.data.expense.FindAllExpensesTaskBuilder;
 import ru.msvdev.homefinance.task.operation.TaskBuilder;
 import ru.msvdev.homefinance.viewutils.table.TableController;
 import ru.msvdev.homefinance.viewutils.table.cell.DateCellModel;
@@ -13,10 +15,12 @@ import ru.msvdev.homefinance.viewutils.table.cell.StringCellModel;
 import ru.msvdev.homefinance.widget.table.expense.columnbuilder.CategoryColumnBuilder;
 import ru.msvdev.homefinance.widget.table.expense.columnbuilder.CostColumnBuilder;
 import ru.msvdev.homefinance.widget.table.expense.columnbuilder.DateColumnBuilder;
+import ru.msvdev.homefinance.widget.table.expense.columnbuilder.NoteColumnBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -24,11 +28,10 @@ import java.util.function.Consumer;
 
 public class AddExpenseTableController extends TableController<ExpenseRowModel, Integer> {
 
+    private final Set<String> notes = ConcurrentHashMap.newKeySet();
     private final Map<String, CategoryEntity> categoryEntityMap = new ConcurrentHashMap<>();
 
     private TableColumn<ExpenseRowModel, DateCellModel> dateColumn;
-    private TableColumn<ExpenseRowModel, StringCellModel> categoryColumn;
-    private TableColumn<ExpenseRowModel, MoneyCellModel> costColumn;
 
     private BiConsumer<Integer, BigDecimal> statisticListener;
 
@@ -49,14 +52,18 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
         dateColumn = dateColumnBuilder.build();
 
         CategoryColumnBuilder categoryColumnBuilder = new CategoryColumnBuilder();
-        categoryColumn = categoryColumnBuilder.build();
+        TableColumn<ExpenseRowModel, StringCellModel> categoryColumn = categoryColumnBuilder.build();
 
         CostColumnBuilder costColumnBuilder = new CostColumnBuilder();
-        costColumn = costColumnBuilder.build();
+        TableColumn<ExpenseRowModel, MoneyCellModel> costColumn = costColumnBuilder.build();
+
+        NoteColumnBuilder noteColumnBuilder = new NoteColumnBuilder();
+        TableColumn<ExpenseRowModel, StringCellModel> noteColumn = noteColumnBuilder.build();
 
         tableView.getColumns().add(dateColumn);
         tableView.getColumns().add(categoryColumn);
         tableView.getColumns().add(costColumn);
+        tableView.getColumns().add(noteColumn);
 
         addNewRow();
     }
@@ -66,6 +73,7 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
         ExpenseRowModel rowModel = ExpenseRowModel.getInstance();
 
         rowModel.setTaskBuilder(taskBuilder);
+        rowModel.setNotes(notes);
         rowModel.setCategoryEntityMap(categoryEntityMap);
         rowModel.setSaveRowEventListener(this::saveRowEventListener);
 
@@ -77,6 +85,19 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
         }
 
         return rowModel;
+    }
+
+    private void refreshNotes() {
+        notes.clear();
+
+        FindAllExpensesTaskBuilder builder = taskBuilder.getBuilder(FindAllExpensesTaskBuilder.class);
+        builder.addSucceededListener(entities -> {
+            for (ExpenseEntity entity : entities) {
+                String note = entity.getNote();
+                if (note != null) notes.add(note);
+            }
+        });
+        builder.buildAndRun();
     }
 
     private void refreshCategoryEntityMap() {
@@ -92,12 +113,17 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
     protected void saveRowEventListener(ExpenseRowModel rowModel) {
         super.saveRowEventListener(rowModel);
         updateStatistic();
+
         if (newRow == null) addNewRow();
+
+        String note = rowModel.noteProperty().get().getValue();
+        if (note != null) notes.add(note);
     }
 
     @Override
     public void refresh() {
         super.refresh();
+        refreshNotes();
         refreshCategoryEntityMap();
     }
 

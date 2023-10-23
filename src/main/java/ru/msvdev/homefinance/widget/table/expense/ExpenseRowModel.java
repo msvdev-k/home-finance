@@ -13,22 +13,26 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 
 public class ExpenseRowModel extends RowModel<ExpenseRowModel, Integer> {
 
+    private Set<String> notes;
     private Map<String, CategoryEntity> categoryEntityMap;
 
     private final ObjectProperty<DateCellModel> date;
     private final ObjectProperty<StringCellModel> category;
     private final ObjectProperty<MoneyCellModel> cost;
     private final ObjectProperty<BooleanCellModel> check;
+    private final ObjectProperty<StringCellModel> note;
 
     {
         date = new SimpleObjectProperty<>();
         category = new SimpleObjectProperty<>();
         cost = new SimpleObjectProperty<>();
         check = new SimpleObjectProperty<>();
+        note = new SimpleObjectProperty<>();
     }
 
 
@@ -55,15 +59,21 @@ public class ExpenseRowModel extends RowModel<ExpenseRowModel, Integer> {
         BooleanCellModel booleanCellModel = new BooleanCellModel();
         rowModel.check.set(booleanCellModel);
 
+        rowModel.note.set(new StringCellModel());
+
         return rowModel;
     }
 
 
     public void setCategoryEntityMap(Map<String, CategoryEntity> categoryEntityMap) {
         this.categoryEntityMap = categoryEntityMap;
-        category.get().setValidValues(categoryEntityMap.keySet());
+        category.get().setCompletionValues(categoryEntityMap.keySet());
     }
 
+    public void setNotes(Set<String> notes) {
+        this.notes = notes;
+        note.get().setCompletionValues(notes);
+    }
 
     private void save() {
         if (date.get().isError() || category.get().isError() || cost.get().isError()) return;
@@ -76,16 +86,19 @@ public class ExpenseRowModel extends RowModel<ExpenseRowModel, Integer> {
             builder.setCost(cost.get().getValue());
             Boolean isCheck = check.get().getValue();
             builder.setState(isCheck != null && isCheck ? ExpenseEntity.State.APPROVED : ExpenseEntity.State.NOT_APPROVED);
+            builder.setNote(note.get().getValue());
             builder.addSucceededListener(this::succeededListener);
             builder.buildAndRun();
 
         } else {
             UpdateExpenseTaskBuilder builder = taskBuilder.getBuilder(UpdateExpenseTaskBuilder.class);
 
+            builder.setId(id.get());
             builder.setDate(date.get().getValue());
             builder.setCategory(categoryEntityMap.get(category.get().getValue()));
             builder.setCost(cost.get().getValue());
             builder.setState(check.get().getValue() ? ExpenseEntity.State.APPROVED : ExpenseEntity.State.NOT_APPROVED);
+            builder.setNote(note.get().getValue());
             builder.addSucceededListener(this::succeededListener);
             builder.buildAndRun();
         }
@@ -100,6 +113,7 @@ public class ExpenseRowModel extends RowModel<ExpenseRowModel, Integer> {
 
         StringCellModel stringCellModel = new StringCellModel();
         stringCellModel.setValue(entity.getCategory().getName());
+        stringCellModel.setCompletionValues(categoryEntityMap.keySet());
         category.set(stringCellModel);
 
         MoneyCellModel moneyCellModel = new MoneyCellModel();
@@ -110,6 +124,11 @@ public class ExpenseRowModel extends RowModel<ExpenseRowModel, Integer> {
         BooleanCellModel booleanCellModel = new BooleanCellModel();
         booleanCellModel.setValue(entity.getState() != null && entity.getState() != ExpenseEntity.State.NOT_APPROVED);
         check.set(booleanCellModel);
+
+        StringCellModel noteStringCellModel = new StringCellModel();
+        noteStringCellModel.setValue(entity.getNote());
+        noteStringCellModel.setCompletionValues(notes);
+        note.set(noteStringCellModel);
 
         saveRowEventListener.accept(this);
     }
@@ -215,6 +234,26 @@ public class ExpenseRowModel extends RowModel<ExpenseRowModel, Integer> {
         cellModel.setValue(check);
         cellModel.setWarning(CellModel.CellWarning.NO_SYNC);
         this.check.set(cellModel);
+
+        save();
+    }
+
+    public ObjectProperty<StringCellModel> noteProperty() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        StringCellModel cellModel = this.note.get().clone();
+        cellModel.resetError();
+
+        if (Objects.equals(cellModel.getValue(), note)) {
+            this.note.set(cellModel);
+            return;
+        }
+
+        cellModel.setValue(note);
+        cellModel.setWarning(CellModel.CellWarning.NO_SYNC);
+        this.note.set(cellModel);
 
         save();
     }

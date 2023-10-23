@@ -12,7 +12,7 @@ public class CheckColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, Boole
 
     public CheckColumnBuilder() {
         setName("Проверено");
-        setPrefWidth(50);
+        setPrefWidth(90);
         setEditable(false);
         setCellValueFactory(new CheckCellValueFactory());
         setConverter(new BooleanStringConverter());
