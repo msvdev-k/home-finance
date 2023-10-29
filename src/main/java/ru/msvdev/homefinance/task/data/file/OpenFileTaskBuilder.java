@@ -8,6 +8,8 @@ import ru.msvdev.homefinance.task.operation.TaskCancel;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 
 
 public class OpenFileTaskBuilder extends BaseTaskBuilder<Void> {
@@ -16,10 +18,12 @@ public class OpenFileTaskBuilder extends BaseTaskBuilder<Void> {
 
     private Path filePath;
     private boolean newFile;
+    private boolean backup;
 
     public OpenFileTaskBuilder(ApplicationContext ctx) {
         super(ctx);
         fileManager = ctx.getBean(FileManager.class);
+        backup = true;
     }
 
     public TaskCancel buildAndRun() {
@@ -48,17 +52,36 @@ public class OpenFileTaskBuilder extends BaseTaskBuilder<Void> {
         this.newFile = newFile;
     }
 
+    /**
+     * Параметр, отвечающий за создание резервной копии
+     * файла перед его открытием
+     *
+     * @param backup true - создать резервною копию (значение по умолчанию), false - копию не делать
+     */
+    public void setBackup(boolean backup) {
+        this.backup = backup;
+    }
 
     /**
      * Класс задачи открытия файла БД
      */
     private class OpenFileTask extends DataTaskBase<Void> {
 
+        private static final String BACKUP_FILE_TEMPLATE = "%1$s.%2$tFT%2$tH-%2$tM-%2$tS.bak";
+
         @Override
         protected Void call() throws Exception {
-            if (newFile && Files.exists(filePath)) {
-                Files.delete(filePath);
+            if (Files.exists(filePath)) {
+                if (newFile) {
+                    Files.delete(filePath);
+
+                } else if (backup) {
+                    LocalDateTime dateTime = LocalDateTime.now();
+                    Path backupPath = Paths.get(String.format(BACKUP_FILE_TEMPLATE, filePath, dateTime)).normalize();
+                    Files.copy(filePath, backupPath);
+                }
             }
+
             fileManager.openFile(filePath);
             return null;
         }
