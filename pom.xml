@@ -74,6 +74,11 @@
             <version>8.40.18</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.8</version>
+        </dependency>
 
         <!--        <dependency>-->
         <!--            <groupId>org.junit.jupiter</groupId>-->

@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,8 @@ import ru.msvdev.homefinance.controller.DataAccessListener;
 import ru.msvdev.homefinance.controller.ShowUtilityWindow;
 import ru.msvdev.homefinance.task.data.file.CloseFileTaskBuilder;
 import ru.msvdev.homefinance.task.data.file.OpenFileTaskBuilder;
+import ru.msvdev.homefinance.task.data.io.csv.ExportToCsvTaskBuilder;
+import ru.msvdev.homefinance.task.data.io.csv.ImportFromCsvTaskBuilder;
 import ru.msvdev.homefinance.task.operation.TaskBuilder;
 import ru.msvdev.homefinance.window.MainAppStage;
 
@@ -36,8 +37,11 @@ public class FileMenuController {
     private MenuItem openMenuItem;
     @FXML
     private MenuItem closeMenuItem;
+
     @FXML
-    private Menu exportMenu;
+    private MenuItem importCsvMenuItem;
+    @FXML
+    private MenuItem exportCsvMenuItem;
 
 
     private void openFile(boolean newFile) {
@@ -80,7 +84,8 @@ public class FileMenuController {
         newMenuItem.setDisable(open);
         openMenuItem.setDisable(open);
         closeMenuItem.setDisable(!open);
-        exportMenu.setDisable(open);
+        importCsvMenuItem.setDisable(!open);
+        exportCsvMenuItem.setDisable(!open);
 
         if (!open) showUtilityWindows.forEach(ShowUtilityWindow::close);
         dataAccessListeners.forEach(listener ->
@@ -104,6 +109,41 @@ public class FileMenuController {
         builder.addRunningListener(this::setCursorWait);
         builder.addSucceededListener(v -> updateOpenFile(false));
         builder.buildAndRun();
+    }
+
+    @FXML
+    public void importCsvFileAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Файлы CSV (*.csv)", "*.csv")
+        );
+
+        File file = fileChooser.showOpenDialog(mainAppStage.getStage());
+
+        if (file != null) {
+            ImportFromCsvTaskBuilder builder = taskBuilder.getBuilder(ImportFromCsvTaskBuilder.class);
+            builder.setFilePath(file.toPath());
+            builder.addRunningListener(this::setCursorWait);
+            builder.addFailedListener(Throwable::printStackTrace);
+            builder.buildAndRun();
+        }
+    }
+
+    public void exportCsvFileAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Файлы CSV (*.csv)", "*.csv")
+        );
+
+        File file = fileChooser.showSaveDialog(mainAppStage.getStage());
+
+        if (file != null) {
+            ExportToCsvTaskBuilder builder = taskBuilder.getBuilder(ExportToCsvTaskBuilder.class);
+            builder.setFilePath(file.toPath());
+            builder.addRunningListener(this::setCursorWait);
+            builder.addFailedListener(Throwable::printStackTrace);
+            builder.buildAndRun();
+        }
     }
 
     @FXML

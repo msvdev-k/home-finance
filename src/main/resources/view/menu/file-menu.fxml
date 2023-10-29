@@ -12,9 +12,8 @@
 
     <SeparatorMenuItem/>
 
-    <Menu fx:id="exportMenu" text="Экспорт">
-        <MenuItem text="Из файла HomeBank..."/>
-    </Menu>
+    <MenuItem fx:id="importCsvMenuItem" text="Импорт из файла CSV..." onAction="#importCsvFileAction" disable="true"/>
+    <MenuItem fx:id="exportCsvMenuItem" text="Экспорт  в файл CSV..." onAction="#exportCsvFileAction" disable="true"/>
 
     <SeparatorMenuItem/>
 
