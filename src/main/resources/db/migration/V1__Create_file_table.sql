@@ -19,6 +19,7 @@ CREATE TABLE "expenses" (
     "state"       VARCHAR(32)   NULL,
     "note"        VARCHAR(256)  NULL,
 
-    CONSTRAINT "positive_cost" CHECK ("cost" >= 0),
-    CONSTRAINT "fk_category"   FOREIGN KEY ("category_id") REFERENCES "categories" ("id")
+    CONSTRAINT "positive_cost"  CHECK ("cost" >= 0),
+    CONSTRAINT "unique_expense" UNIQUE ("date", "category_id", "cost"),
+    CONSTRAINT "fk_category"    FOREIGN KEY ("category_id") REFERENCES "categories" ("id")
 );

@@ -52,7 +52,7 @@ public class ImportFromCsvTaskBuilder extends BaseTaskBuilder<Void> {
     private class ImportFromCsvTask extends DataTaskBase<Void> {
 
         private final Map<String, CategoryEntity> categoryEntityMap = new HashMap<>();
-        private final Map<LocalDate, Map<String, Set<BigDecimal>>> expensesMap = new HashMap<>();
+        private final Set<Set<Object>> uniqueExpenses = new HashSet<>();
 
         @Override
         protected Void call() throws Exception {
@@ -66,17 +66,11 @@ public class ImportFromCsvTaskBuilder extends BaseTaskBuilder<Void> {
             expenseService
                     .findAll()
                     .forEach(entity -> {
-                        LocalDate date = entity.getDate();
-                        String category = entity.getCategory().getName();
-                        BigDecimal cost = entity.getCost();
-
-                        if (!expensesMap.containsKey(date)) {
-                            expensesMap.put(date, new HashMap<>());
-                        }
-                        if (!expensesMap.get(date).containsKey(category)) {
-                            expensesMap.get(date).put(category, new HashSet<>());
-                        }
-                        expensesMap.get(date).get(category).add(cost);
+                        Set<Object> expense = new HashSet<>();
+                        expense.add(entity.getDate());
+                        expense.add(entity.getCategory().getName());
+                        expense.add(entity.getCost());
+                        uniqueExpenses.add(expense);
                     });
 
             List<OperationCsvRow> rowsFromCsv = csvIO.importFromCsv(filePath);
@@ -101,10 +95,12 @@ public class ImportFromCsvTaskBuilder extends BaseTaskBuilder<Void> {
         }
 
         private void saveExpense(LocalDate date, CategoryEntity category, BigDecimal cost, String note, Boolean check) {
-            if (expensesMap.containsKey(date) &&
-                    expensesMap.get(date).containsKey(category.getName()) &&
-                    expensesMap.get(date).get(category.getName()).contains(cost))
-                return;
+            Set<Object> expense = new HashSet<>();
+            expense.add(date);
+            expense.add(category.getName());
+            expense.add(cost);
+
+            if (uniqueExpenses.contains(expense)) return;
 
             ExpenseEntity entity = new ExpenseEntity();
             entity.setDate(date);
@@ -114,16 +110,11 @@ public class ImportFromCsvTaskBuilder extends BaseTaskBuilder<Void> {
             entity.setState(check ? ExpenseEntity.State.APPROVED : ExpenseEntity.State.NOT_APPROVED);
 
             entity = expenseService.newExpense(entity);
+            expense.add(entity.getDate());
+            expense.add(entity.getCategory().getName());
+            expense.add(entity.getCost());
 
-            String categoryName = entity.getCategory().getName();
-
-            if (!expensesMap.containsKey(date)) {
-                expensesMap.put(date, new HashMap<>());
-            }
-            if (!expensesMap.get(date).containsKey(categoryName)) {
-                expensesMap.get(date).put(categoryName, new HashSet<>());
-            }
-            expensesMap.get(date).get(categoryName).add(cost);
+            uniqueExpenses.add(expense);
         }
     }
 }
