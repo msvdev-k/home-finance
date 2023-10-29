@@ -7,7 +7,7 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="ru.msvdev.homefinance.controller.utility.expenses.AddExpensesUtilityController"
       prefHeight="800.0"
-      prefWidth="960.0"
+      prefWidth="750.0"
       spacing="5.0">
 
     <HBox prefWidth="210.0" spacing="5.0">

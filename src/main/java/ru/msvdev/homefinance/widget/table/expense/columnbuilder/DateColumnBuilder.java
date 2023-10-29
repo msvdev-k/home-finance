@@ -12,7 +12,7 @@ public class DateColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, DateCe
 
     public DateColumnBuilder() {
         setName("Дата");
-        setPrefWidth(100);
+        setPrefWidth(80);
         setEditable(true);
         setCellValueFactory(new DateCellValueFactory());
         setConverter(new DateStringConverter());

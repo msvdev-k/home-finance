@@ -12,7 +12,7 @@ public class CategoryColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, St
 
     public CategoryColumnBuilder() {
         setName("Категория");
-        setPrefWidth(360);
+        setPrefWidth(285);
         setEditable(true);
         setCellValueFactory(new CategoryCellValueFactory());
         setConverter(new StringStringConverter());

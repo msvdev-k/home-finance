@@ -12,7 +12,7 @@ public class NoteColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, String
 
     public NoteColumnBuilder() {
         setName("Примечание");
-        setPrefWidth(360);
+        setPrefWidth(285);
         setEditable(true);
         setCellValueFactory(new NoteCellValueFactory());
         setConverter(new StringStringConverter());

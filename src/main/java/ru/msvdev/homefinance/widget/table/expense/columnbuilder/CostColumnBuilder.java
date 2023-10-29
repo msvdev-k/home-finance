@@ -12,7 +12,7 @@ public class CostColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, MoneyC
 
     public CostColumnBuilder() {
         setName("Стоимость");
-        setPrefWidth(130);
+        setPrefWidth(90);
         setEditable(true);
         setCellValueFactory(new CostCellValueFactory());
         setConverter(new MoneyStringConverter());
