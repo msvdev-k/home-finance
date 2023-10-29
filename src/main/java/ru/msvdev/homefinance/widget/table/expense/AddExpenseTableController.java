@@ -43,6 +43,7 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
     @Override
     public void initTable() {
         super.initTable();
+        refreshNotes();
         refreshCategoryEntityMap();
 
         tableView.getSelectionModel().setCellSelectionEnabled(true);
