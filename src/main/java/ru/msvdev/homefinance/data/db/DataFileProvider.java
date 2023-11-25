@@ -24,10 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DataFileProvider implements FileManager, PlatformTransactionManager {
 
-    private static final String DB_URL_TEMPLATE = "jdbc:h2:file:%s;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH";
-    private static final String DB_USERNAME = "sa";
-    private static final String DB_PASSWORD = "";
-    private static final String DB_FILE_EXTENSION_REGEX = "\\.mv\\.db$";
+    private static final String DB_URL_TEMPLATE = "jdbc:sqlite:%s?DATE_CLASS=text";
 
     private final List<RepositoryFactoryUpdateListener> repositoryFactoryUpdateListeners;
 
@@ -41,11 +38,7 @@ public class DataFileProvider implements FileManager, PlatformTransactionManager
     @Override
     public void openFile(Path path) {
         closeFile();
-
-        String fileName = path.toString();
-        String dbName = fileName.replaceAll(DB_FILE_EXTENSION_REGEX, "");
-
-        connectToDB(dbName);
+        connectToDB(path.toString());
         migrate();
         configureDataAccess();
     }
@@ -83,8 +76,8 @@ public class DataFileProvider implements FileManager, PlatformTransactionManager
 
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
-        config.setUsername(DB_USERNAME);
-        config.setPassword(DB_PASSWORD);
+//        config.setUsername(DB_USERNAME);
+//        config.setPassword(DB_PASSWORD);
 
         dataSource = new HikariDataSource(config);
     }

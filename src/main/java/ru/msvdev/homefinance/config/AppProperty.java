@@ -17,4 +17,9 @@ public class AppProperty {
     @Value("${application-version}")
     private String applicationVersion;
 
+    @Value("${application-file-extension}")
+    private String applicationFileExtension;
+
+    @Value("${application-file-description}")
+    private String applicationFileDescription;
 }

@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class ImportFromCsvTaskBuilder extends BaseTaskBuilder<Void> {
@@ -56,8 +57,26 @@ public class ImportFromCsvTaskBuilder extends BaseTaskBuilder<Void> {
 
         @Override
         protected Void call() throws Exception {
+            List<OperationCsvRow> rowsFromCsv = csvIO.importFromCsv(filePath);
+
             categoryService
                     .findAll()
+                    .forEach(entity -> {
+                        entity.setExpenses(null);
+                        categoryEntityMap.put(entity.getName(), entity);
+                    });
+
+            Set<CategoryEntity> newCategories = rowsFromCsv.stream()
+                    .map(OperationCsvRow::getCategory)
+                    .filter(categoryName -> !categoryEntityMap.containsKey(categoryName))
+                    .map(categoryName -> {
+                        CategoryEntity categoryEntity = new CategoryEntity();
+                        categoryEntity.setName(categoryName);
+                        return categoryEntity;
+                    })
+                    .collect(Collectors.toSet());
+
+            categoryService.newCategory(newCategories)
                     .forEach(entity -> {
                         entity.setExpenses(null);
                         categoryEntityMap.put(entity.getName(), entity);
@@ -73,48 +92,38 @@ public class ImportFromCsvTaskBuilder extends BaseTaskBuilder<Void> {
                         uniqueExpenses.add(expense);
                     });
 
-            List<OperationCsvRow> rowsFromCsv = csvIO.importFromCsv(filePath);
+            List<ExpenseEntity> newExpenseEntities = new ArrayList<>();
 
             for (OperationCsvRow row : rowsFromCsv) {
-                CategoryEntity categoryEntity = saveCategory(row.getCategory());
-                saveExpense(row.getDate(), categoryEntity, row.getCost(), row.getNote(), row.getCheck());
+                LocalDate date = row.getDate();
+                String categoryName = row.getCategory();
+                BigDecimal cost = row.getCost();
+                String note = row.getNote();
+                Boolean check = row.getCheck();
+
+                CategoryEntity category = categoryEntityMap.get(categoryName);
+
+                Set<Object> expense = new HashSet<>();
+                expense.add(date);
+                expense.add(category.getName());
+                expense.add(cost);
+
+                if (uniqueExpenses.contains(expense)) continue;
+
+                ExpenseEntity expenseEntity = new ExpenseEntity();
+                expenseEntity.setDate(date);
+                expenseEntity.setCategory(category);
+                expenseEntity.setCost(cost);
+                expenseEntity.setNote(note);
+                expenseEntity.setState(check ? ExpenseEntity.State.APPROVED : ExpenseEntity.State.NOT_APPROVED);
+
+                newExpenseEntities.add(expenseEntity);
+                uniqueExpenses.add(expense);
             }
+
+            expenseService.newExpense(newExpenseEntities);
 
             return null;
-        }
-
-        private CategoryEntity saveCategory(String categoryName) {
-            if (categoryEntityMap.containsKey(categoryName)) {
-                return categoryEntityMap.get(categoryName);
-            }
-            CategoryEntity entity = new CategoryEntity();
-            entity.setName(categoryName);
-            entity = categoryService.newCategory(entity);
-            categoryEntityMap.put(entity.getName(), entity);
-            return entity;
-        }
-
-        private void saveExpense(LocalDate date, CategoryEntity category, BigDecimal cost, String note, Boolean check) {
-            Set<Object> expense = new HashSet<>();
-            expense.add(date);
-            expense.add(category.getName());
-            expense.add(cost);
-
-            if (uniqueExpenses.contains(expense)) return;
-
-            ExpenseEntity entity = new ExpenseEntity();
-            entity.setDate(date);
-            entity.setCategory(category);
-            entity.setCost(cost);
-            entity.setNote(note);
-            entity.setState(check ? ExpenseEntity.State.APPROVED : ExpenseEntity.State.NOT_APPROVED);
-
-            entity = expenseService.newExpense(entity);
-            expense.add(entity.getDate());
-            expense.add(entity.getCategory().getName());
-            expense.add(entity.getCost());
-
-            uniqueExpenses.add(expense);
         }
     }
 }

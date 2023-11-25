@@ -1,6 +1,10 @@
 # Основные сведения о приложении
 application-name: Home Finance
-application-version: 2023.10.29-alpha
+application-version: 2023.11.23-alpha
+
+# Свойства файла с данными
+application-file-extension: hf
+application-file-description: Файлы Home Finance (*.hf)
 
 
 

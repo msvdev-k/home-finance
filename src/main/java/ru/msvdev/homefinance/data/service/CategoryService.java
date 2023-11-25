@@ -9,6 +9,7 @@ import ru.msvdev.homefinance.data.entity.CategoryEntity;
 import ru.msvdev.homefinance.data.exception.NotFoundException;
 import ru.msvdev.homefinance.data.repository.CategoryRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,12 @@ public class CategoryService implements RepositoryFactoryUpdateListener {
     public CategoryEntity newCategory(@NonNull CategoryEntity categoryEntity) {
         categoryEntity.setId(null);
         return categoryRepository.save(categoryEntity);
+    }
+
+    @Transactional
+    public List<CategoryEntity> newCategory(@NonNull Collection<CategoryEntity> categoryEntities) {
+        categoryEntities.forEach(entity -> entity.setId(null));
+        return categoryRepository.saveAll(categoryEntities);
     }
 
     @Transactional

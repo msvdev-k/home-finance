@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory>
         <!-- General configuration -->
-        <property name="dialect">org.hibernate.dialect.PostgreSQL95Dialect</property>
+        <property name="dialect">org.sqlite.hibernate.dialect.SQLiteDialect</property>
         <property name="current_session_context_class">thread</property>
 
         <!-- Mapping Properties -->

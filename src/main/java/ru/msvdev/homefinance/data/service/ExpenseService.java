@@ -9,6 +9,7 @@ import ru.msvdev.homefinance.data.entity.ExpenseEntity;
 import ru.msvdev.homefinance.data.exception.NotFoundException;
 import ru.msvdev.homefinance.data.repository.ExpenseRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,12 @@ public class ExpenseService implements RepositoryFactoryUpdateListener {
     public ExpenseEntity newExpense(@NonNull ExpenseEntity expenseEntity) {
         expenseEntity.setId(null);
         return expenseRepository.save(expenseEntity);
+    }
+
+    @Transactional
+    public List<ExpenseEntity> newExpense(@NonNull Collection<ExpenseEntity> expenseEntities) {
+        expenseEntities.forEach(expenseEntity -> expenseEntity.setId(null));
+        return expenseRepository.saveAll(expenseEntities);
     }
 
     @Transactional

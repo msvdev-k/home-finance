@@ -8,6 +8,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import ru.msvdev.homefinance.config.AppProperty;
 import ru.msvdev.homefinance.controller.DataAccessListener;
 import ru.msvdev.homefinance.controller.ShowUtilityWindow;
 import ru.msvdev.homefinance.task.data.file.CloseFileTaskBuilder;
@@ -28,6 +29,8 @@ public class FileMenuController {
     private final MainAppStage mainAppStage;
     private final TaskBuilder taskBuilder;
 
+    private final AppProperty appProperty;
+
     private final List<DataAccessListener> dataAccessListeners;
     private final List<ShowUtilityWindow> showUtilityWindows;
 
@@ -47,7 +50,10 @@ public class FileMenuController {
     private void openFile(boolean newFile) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Файлы Home Finance (*.mv.db)", "*.mv.db")
+                new FileChooser.ExtensionFilter(
+                        appProperty.getApplicationFileDescription(),
+                        "*." + appProperty.getApplicationFileExtension()
+                )
         );
 
         File file = newFile ?
@@ -62,6 +68,7 @@ public class FileMenuController {
             builder.addRunningListener(this::setCursorWait);
             builder.addSucceededListener(v -> updateOpenFile(true));
             builder.addFailedListener(v -> updateOpenFile(false));
+//            builder.addFailedListener(Throwable::printStackTrace);
 
             builder.buildAndRun();
         }
