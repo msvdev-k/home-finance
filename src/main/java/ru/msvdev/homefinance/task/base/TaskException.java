@@ -8,24 +8,25 @@ import lombok.Getter;
 @Getter
 public class TaskException extends RuntimeException {
 
-    private final String title;
-    private final String header;
+    private final Type type;
 
     public TaskException(Throwable cause) {
         this("", cause);
     }
 
     public TaskException(String message, Throwable cause) {
-        this("Ошибка выполнения задачи", message, cause);
+        this(Type.ERROR, message, cause);
     }
 
-    public TaskException(String header, String message, Throwable cause) {
-        this("Ошибка", header, message, cause);
-    }
-
-    public TaskException(String title, String header, String message, Throwable cause) {
+    public TaskException(Type type, String message, Throwable cause) {
         super(message, cause);
-        this.title = title;
-        this.header = header;
+        this.type = type;
+    }
+
+
+    public enum Type {
+        INFORMATION,
+        WARNING,
+        ERROR
     }
 }

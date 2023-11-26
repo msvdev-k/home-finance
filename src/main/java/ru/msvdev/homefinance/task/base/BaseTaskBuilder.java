@@ -1,6 +1,10 @@
 package ru.msvdev.homefinance.task.base;
 
+import javafx.scene.control.Alert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import ru.msvdev.homefinance.config.AppConstant;
 import ru.msvdev.homefinance.task.base.task.DataTaskBase;
 import ru.msvdev.homefinance.task.base.task.TaskBase;
 import ru.msvdev.homefinance.task.operation.TaskCancel;
@@ -18,6 +22,7 @@ import java.util.function.Consumer;
  * @param <T> тип результата, возвращаемого в случае успешного завершения задачи
  */
 public abstract class BaseTaskBuilder<T> {
+    static final Logger logger = LoggerFactory.getLogger(AppConstant.LOGGER_NAME);
 
     protected final ApplicationContext ctx;
 
@@ -32,6 +37,9 @@ public abstract class BaseTaskBuilder<T> {
 
     public BaseTaskBuilder(ApplicationContext ctx) {
         this.ctx = ctx;
+
+        failedListeners.add(this::loggerFailedListener);
+        failedListeners.add(this::alertFailedListener);
     }
 
 
@@ -105,4 +113,50 @@ public abstract class BaseTaskBuilder<T> {
         return task::cancel;
     }
 
+
+    private void loggerFailedListener(TaskException taskException) {
+        switch (taskException.getType()) {
+            case INFORMATION:
+                logger.info(taskException.getMessage());
+                break;
+
+            case WARNING:
+                logger.warn(taskException.getMessage());
+                break;
+
+            case ERROR:
+                logger.error(taskException.getMessage(), taskException.getCause());
+                break;
+        }
+    }
+
+    private void alertFailedListener(TaskException taskException) {
+        Alert alert = null;
+
+        switch (taskException.getType()) {
+            case INFORMATION:
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Информация");
+                break;
+
+            case WARNING:
+                alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Предупреждение");
+                break;
+
+            case ERROR:
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ошибка");
+                break;
+        }
+
+        alert.setHeaderText(null);
+
+        String message = taskException.getMessage();
+        if (message == null || message.trim().isEmpty()) {
+            message = "Сообщение отсутствует ¯\\_(ツ)_/¯";
+        }
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

@@ -3,18 +3,25 @@ package ru.msvdev.homefinance;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.msvdev.homefinance.config.AppConstant;
+import ru.msvdev.homefinance.config.AppProperty;
+import ru.msvdev.homefinance.config.ApplicationConfig;
 import ru.msvdev.homefinance.data.db.DataFileProvider;
+import ru.msvdev.homefinance.task.operation.TaskExecutor;
 import ru.msvdev.homefinance.window.MainAppStage;
 import ru.msvdev.homefinance.window.SceneLoader;
-import ru.msvdev.homefinance.task.operation.TaskExecutor;
-import ru.msvdev.homefinance.config.ApplicationConfig;
-import ru.msvdev.homefinance.config.AppProperty;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 
 public class DesktopApplication extends Application {
+    static final Logger logger = LoggerFactory.getLogger(AppConstant.LOGGER_NAME);
+    static long startTime;
 
     private ApplicationContext ctx;
 
@@ -35,6 +42,9 @@ public class DesktopApplication extends Application {
         stage.setTitle(appProperty.getApplicationName() + " " + appProperty.getApplicationVersion());
         stage.setScene(scene);
         stage.show();
+
+        long startedTime = System.nanoTime();
+        logger.info("Application started ({} s)", (startedTime - startTime) * 1e-9);
     }
 
     @Override
@@ -47,6 +57,17 @@ public class DesktopApplication extends Application {
     }
 
     public static void main(String[] args) {
+        logger.info("Application start");
+        startTime = System.nanoTime();
+
         launch();
+
+        long workingTime = System.nanoTime() - startTime;
+        long days = TimeUnit.NANOSECONDS.toDays(workingTime);
+        long hours = TimeUnit.NANOSECONDS.toHours(workingTime);
+        long minutes = TimeUnit.NANOSECONDS.toMinutes(workingTime);
+        long seconds = TimeUnit.NANOSECONDS.toSeconds(workingTime);
+        logger.info("Application stop (working {} days, {} hours, {} minutes and {} seconds)",
+                days, hours - days * 24, minutes - hours * 60, seconds - minutes * 60);
     }
 }

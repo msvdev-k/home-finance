@@ -68,7 +68,6 @@ public class FileMenuController {
             builder.addRunningListener(this::setCursorWait);
             builder.addSucceededListener(v -> updateOpenFile(true));
             builder.addFailedListener(v -> updateOpenFile(false));
-//            builder.addFailedListener(Throwable::printStackTrace);
 
             builder.buildAndRun();
         }
@@ -131,7 +130,6 @@ public class FileMenuController {
             ImportFromCsvTaskBuilder builder = taskBuilder.getBuilder(ImportFromCsvTaskBuilder.class);
             builder.setFilePath(file.toPath());
             builder.addRunningListener(this::setCursorWait);
-//            builder.addFailedListener(Throwable::printStackTrace);
             builder.buildAndRun();
         }
     }
@@ -148,7 +146,6 @@ public class FileMenuController {
             ExportToCsvTaskBuilder builder = taskBuilder.getBuilder(ExportToCsvTaskBuilder.class);
             builder.setFilePath(file.toPath());
             builder.addRunningListener(this::setCursorWait);
-//            builder.addFailedListener(Throwable::printStackTrace);
             builder.buildAndRun();
         }
     }
