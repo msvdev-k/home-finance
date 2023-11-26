@@ -15,11 +15,13 @@ import ru.msvdev.homefinance.task.data.file.CloseFileTaskBuilder;
 import ru.msvdev.homefinance.task.data.file.OpenFileTaskBuilder;
 import ru.msvdev.homefinance.task.data.io.csv.ExportToCsvTaskBuilder;
 import ru.msvdev.homefinance.task.data.io.csv.ImportFromCsvTaskBuilder;
+import ru.msvdev.homefinance.task.data.io.xhb.ImportFromXhbTaskBuilder;
 import ru.msvdev.homefinance.task.operation.TaskBuilder;
 import ru.msvdev.homefinance.window.MainAppStage;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 
 @Controller
@@ -118,19 +120,32 @@ public class FileMenuController {
     }
 
     @FXML
-    public void importCsvFileAction(ActionEvent actionEvent) {
+    public void importFromFileAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Файлы CSV (*.csv)", "*.csv")
+        );
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Файлы Home Bank (*.xhb)", "*.xhb")
         );
 
         File file = fileChooser.showOpenDialog(mainAppStage.getStage());
 
         if (file != null) {
-            ImportFromCsvTaskBuilder builder = taskBuilder.getBuilder(ImportFromCsvTaskBuilder.class);
-            builder.setFilePath(file.toPath());
-            builder.addRunningListener(this::setCursorWait);
-            builder.buildAndRun();
+            String fileName = file.getName().toLowerCase(Locale.ROOT);
+
+            if (fileName.endsWith(".xhb")) {
+                ImportFromXhbTaskBuilder builder = taskBuilder.getBuilder(ImportFromXhbTaskBuilder.class);
+                builder.setFilePath(file.toPath());
+                builder.addRunningListener(this::setCursorWait);
+                builder.buildAndRun();
+
+            } else {
+                ImportFromCsvTaskBuilder builder = taskBuilder.getBuilder(ImportFromCsvTaskBuilder.class);
+                builder.setFilePath(file.toPath());
+                builder.addRunningListener(this::setCursorWait);
+                builder.buildAndRun();
+            }
         }
     }
 

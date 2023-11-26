@@ -12,8 +12,8 @@
 
     <SeparatorMenuItem/>
 
-    <MenuItem fx:id="importCsvMenuItem" text="Импорт из файла CSV..." onAction="#importCsvFileAction" disable="true"/>
-    <MenuItem fx:id="exportCsvMenuItem" text="Экспорт  в файл CSV..." onAction="#exportCsvFileAction" disable="true"/>
+    <MenuItem fx:id="importCsvMenuItem" text="Импорт из файла..." onAction="#importFromFileAction" disable="true"/>
+    <MenuItem fx:id="exportCsvMenuItem" text="Экспорт в файл CSV..." onAction="#exportCsvFileAction" disable="true"/>
 
     <SeparatorMenuItem/>
 
