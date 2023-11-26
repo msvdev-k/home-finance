@@ -12,6 +12,7 @@ import ru.msvdev.homefinance.task.base.task.DataTaskBase;
 import ru.msvdev.homefinance.task.operation.TaskCancel;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.*;
@@ -88,7 +89,7 @@ public class ImportFromCsvTaskBuilder extends BaseTaskBuilder<Void> {
                         Set<Object> expense = new HashSet<>();
                         expense.add(entity.getDate());
                         expense.add(entity.getCategory().getName());
-                        expense.add(entity.getCost());
+                        expense.add(entity.getCost().setScale(2, RoundingMode.HALF_UP));
                         uniqueExpenses.add(expense);
                     });
 
@@ -97,7 +98,7 @@ public class ImportFromCsvTaskBuilder extends BaseTaskBuilder<Void> {
             for (OperationCsvRow row : rowsFromCsv) {
                 LocalDate date = row.getDate();
                 String categoryName = row.getCategory();
-                BigDecimal cost = row.getCost();
+                BigDecimal cost = row.getCost().setScale(2, RoundingMode.HALF_UP);
                 String note = row.getNote();
                 Boolean check = row.getCheck();
 
