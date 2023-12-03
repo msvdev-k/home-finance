@@ -126,6 +126,8 @@ public class AddExpenseTableController extends TableController<ExpenseRowModel, 
         super.refresh();
         refreshNotes();
         refreshCategoryEntityMap();
+        updateStatistic();
+        addNewRow();
     }
 
 

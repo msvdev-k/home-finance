@@ -11,6 +11,7 @@
       spacing="5.0">
 
     <HBox prefWidth="210.0" spacing="5.0">
+        <Button fx:id="newListButton" onAction="#newItems" text="Новый список"/>
         <Button fx:id="deleteButton" onAction="#deleteItem" text="Удалить"/>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
             <Label fx:id="statistic" text="0 записей на сумму 0 рублей"/>

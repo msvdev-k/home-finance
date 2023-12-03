@@ -39,6 +39,8 @@ public class AddExpensesUtilityController implements Initializable, ShowUtilityW
 
 
     @FXML
+    public Button newListButton;
+    @FXML
     public Button deleteButton;
     @FXML
     public Label statistic;
@@ -86,6 +88,11 @@ public class AddExpensesUtilityController implements Initializable, ShowUtilityW
     @FXML
     public void deleteItem(ActionEvent actionEvent) {
         tableController.removeSelected();
+    }
+
+    @FXML
+    public void newItems(ActionEvent actionEvent) {
+        tableController.refresh();
     }
 
     private void updateStatisticLabel(Integer count, BigDecimal cost) {
