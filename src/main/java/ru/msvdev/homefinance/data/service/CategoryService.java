@@ -8,6 +8,7 @@ import ru.msvdev.homefinance.data.db.RepositoryFactoryUpdateListener;
 import ru.msvdev.homefinance.data.entity.CategoryEntity;
 import ru.msvdev.homefinance.data.exception.NotFoundException;
 import ru.msvdev.homefinance.data.repository.CategoryRepository;
+import ru.msvdev.homefinance.task.base.TaskException;
 
 import java.util.Collection;
 import java.util.List;
@@ -54,7 +55,19 @@ public class CategoryService implements RepositoryFactoryUpdateListener {
 
     @Transactional
     public void deleteById(@NonNull Integer id) {
-        categoryRepository.deleteById(id);
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(id);
+        if (!categoryEntity.isPresent()) return;
+
+        if (categoryEntity.get().getExpenses().isEmpty()) {
+            categoryRepository.deleteById(id);
+
+        } else {
+            throw new TaskException(
+                    TaskException.Type.WARNING,
+                    "Нельзя удалить категорию на которую ссылаются записи о расходах!",
+                    null
+            );
+        }
     }
 
 
