@@ -31,6 +31,7 @@ public class OpenFileTaskBuilder extends BaseTaskBuilder<Void> {
             throw new NullPointerException("filePath - обязательный параметр не равный null");
         }
 
+        addFailedListener(taskException -> fileManager.closeFile());
         return buildAndRun(new OpenFileTask());
     }
 
