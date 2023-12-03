@@ -53,6 +53,10 @@ public abstract class TableController<ROW extends RowModel<?, ID>, ID> {
         }
     }
 
+    public int getSelectedCount() {
+        return tableView.getSelectionModel().getSelectedIndices().size();
+    }
+
     abstract public void addNewRow();
 
     abstract public void removeSelected();

@@ -4,9 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +19,7 @@ import ru.msvdev.homefinance.window.SceneLoader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -85,7 +84,22 @@ public class ExpensesUtilityController implements Initializable, ShowUtilityWind
 
     @FXML
     public void deleteItem(ActionEvent actionEvent) {
-        tableController.removeSelected();
+        int count = tableController.getSelectedCount();
+        if (count <= 0) return;
+
+        Alert alert = new Alert(
+                Alert.AlertType.WARNING,
+                String.format("Вы действительно хотите удалить %d записей?", count),
+                ButtonType.OK, ButtonType.CANCEL);
+
+        alert.setTitle("Удаление записей");
+        alert.setHeaderText(null);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            tableController.removeSelected();
+        }
     }
 
     private void updateStatisticLabel(Integer count, BigDecimal cost) {
