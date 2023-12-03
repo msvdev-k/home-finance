@@ -57,6 +57,11 @@ public class ExpenseService implements RepositoryFactoryUpdateListener {
         expenseRepository.deleteById(id);
     }
 
+    @Transactional
+    public void deleteById(@NonNull Collection<Integer> idCollection) {
+        expenseRepository.deleteAllById(idCollection);
+    }
+
 
     @Override
     public void repositoryFactoryUpdate(RepositoryFactorySupport repositoryFactorySupport) {

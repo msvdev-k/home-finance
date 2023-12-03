@@ -6,7 +6,7 @@ import javafx.scene.control.TableColumn;
 import ru.msvdev.homefinance.data.entity.CategoryEntity;
 import ru.msvdev.homefinance.data.entity.ExpenseEntity;
 import ru.msvdev.homefinance.task.data.category.FindAllCategoriesTaskBuilder;
-import ru.msvdev.homefinance.task.data.expense.DeleteExpenseByIdTaskBuilder;
+import ru.msvdev.homefinance.task.data.expense.DeleteAllExpensesByIdTaskBuilder;
 import ru.msvdev.homefinance.task.data.expense.FindAllExpensesTaskBuilder;
 import ru.msvdev.homefinance.task.operation.TaskBuilder;
 import ru.msvdev.homefinance.viewutils.table.TableController;
@@ -17,6 +17,8 @@ import ru.msvdev.homefinance.viewutils.table.cell.StringCellModel;
 import ru.msvdev.homefinance.widget.table.expense.columnbuilder.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
@@ -136,7 +138,8 @@ public class ExpenseTableController extends TableController<ExpenseRowModel, Int
     @Override
     public void removeSelected() {
         ObservableList<ExpenseRowModel> selectedItems = tableView.getSelectionModel().getSelectedItems();
-        DeleteExpenseByIdTaskBuilder builder = taskBuilder.getBuilder(DeleteExpenseByIdTaskBuilder.class);
+        DeleteAllExpensesByIdTaskBuilder builder = taskBuilder.getBuilder(DeleteAllExpensesByIdTaskBuilder.class);
+        DeleteRowsListener deleteRowsListener = new DeleteRowsListener();
 
         for (ExpenseRowModel item : selectedItems) {
             if (item == newRow) {
@@ -146,10 +149,12 @@ public class ExpenseTableController extends TableController<ExpenseRowModel, Int
                 continue;
             }
 
-            builder.setId(item.idProperty().get());
-            builder.addSucceededListener(new DeleteRowListener(item));
-            builder.buildAndRun();
+            builder.addId(item.idProperty().get());
+            deleteRowsListener.addRowModel(item);
         }
+
+        builder.addSucceededListener(deleteRowsListener);
+        builder.buildAndRun();
     }
 
     public void setStatisticListener(BiConsumer<Integer, BigDecimal> statisticListener) {
@@ -167,17 +172,17 @@ public class ExpenseTableController extends TableController<ExpenseRowModel, Int
         }
     }
 
-    private class DeleteRowListener implements Consumer<Void> {
-        private final ExpenseRowModel rowModel;
+    private class DeleteRowsListener implements Consumer<Void> {
+        private final List<ExpenseRowModel> rowModels = new ArrayList<>();
 
-        public DeleteRowListener(ExpenseRowModel rowModel) {
-            this.rowModel = rowModel;
+        public void addRowModel(ExpenseRowModel rowModel) {
+            rowModels.add(rowModel);
         }
 
         @Override
         public void accept(Void unused) {
-            tableView.getItems().remove(rowModel);
-            rows.remove(rowModel.idProperty().get());
+            rowModels.forEach(rowModel -> rows.remove(rowModel.idProperty().get()));
+            tableView.getItems().removeAll(rowModels);
             updateStatistic();
         }
     }
