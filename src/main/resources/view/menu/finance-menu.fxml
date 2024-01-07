@@ -5,8 +5,7 @@
 <Menu xmlns:fx="http://javafx.com/fxml"
       fx:controller="ru.msvdev.homefinance.controller.menu.FinanceMenuController"
       fx:id="financeMenu"
-      text="Управление финансами"
-      visible="false">
+      text="Управление финансами">
 
     <MenuItem text="Добавить расходы..." onAction="#addExpensesAction"/>
     <MenuItem text="Список расходов..." onAction="#expensesListAction"/>

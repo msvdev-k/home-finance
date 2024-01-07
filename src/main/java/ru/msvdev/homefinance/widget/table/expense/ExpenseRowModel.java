@@ -2,12 +2,12 @@ package ru.msvdev.homefinance.widget.table.expense;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import ru.msvdev.desktop.utils.widget.datatable.RowModel;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.*;
 import ru.msvdev.homefinance.data.entity.CategoryEntity;
 import ru.msvdev.homefinance.data.entity.ExpenseEntity;
 import ru.msvdev.homefinance.task.data.expense.NewExpenseTaskBuilder;
 import ru.msvdev.homefinance.task.data.expense.UpdateExpenseTaskBuilder;
-import ru.msvdev.homefinance.viewutils.table.cell.*;
-import ru.msvdev.homefinance.viewutils.table.RowModel;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

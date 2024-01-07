@@ -1,11 +1,12 @@
 package ru.msvdev.homefinance.widget.table.expense.columnbuilder;
 
-import ru.msvdev.homefinance.viewutils.table.BaseColumnBuilder;
-import ru.msvdev.homefinance.viewutils.table.cell.DateCellModel;
-import ru.msvdev.homefinance.viewutils.table.converter.DateStringConverter;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import ru.msvdev.desktop.utils.widget.datatable.BaseColumnBuilder;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.DateCellModel;
+import ru.msvdev.desktop.utils.widget.datatable.cell.table.DateTableCell;
 import ru.msvdev.homefinance.widget.table.expense.ExpenseRowModel;
-import ru.msvdev.homefinance.widget.table.expense.editevent.DateEditEvent;
-import ru.msvdev.homefinance.widget.table.expense.valuefactory.DateCellValueFactory;
 
 
 public class DateColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, DateCellModel> {
@@ -14,8 +15,20 @@ public class DateColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, DateCe
         setName("Дата");
         setPrefWidth(80);
         setEditable(true);
-        setCellValueFactory(new DateCellValueFactory());
-        setConverter(new DateStringConverter());
-        setEditEvent(new DateEditEvent());
+    }
+
+    @Override
+    protected void modelValueSetter(ExpenseRowModel expenseRowModel, DateCellModel dateCellModel) {
+        expenseRowModel.setDate(dateCellModel.getValue());
+    }
+
+    @Override
+    protected ObservableValue<DateCellModel> cellValueFactory(TableColumn.CellDataFeatures<ExpenseRowModel, DateCellModel> cellDataFeatures) {
+        return cellDataFeatures.getValue().dateProperty();
+    }
+
+    @Override
+    protected TableCell<ExpenseRowModel, DateCellModel> cellFactory(TableColumn<ExpenseRowModel, DateCellModel> tableColumn) {
+        return new DateTableCell<>();
     }
 }

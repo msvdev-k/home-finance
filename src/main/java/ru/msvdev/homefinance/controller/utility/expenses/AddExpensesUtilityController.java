@@ -11,12 +11,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import ru.msvdev.desktop.utils.event.listener.CloseWindowEventListener;
+import ru.msvdev.desktop.utils.task.TaskBuilder;
+import ru.msvdev.desktop.utils.scene.PrimaryStage;
+import ru.msvdev.desktop.utils.scene.SceneLoader;
 import ru.msvdev.homefinance.controller.ShowUtilityWindow;
-import ru.msvdev.homefinance.task.operation.TaskBuilder;
 import ru.msvdev.homefinance.widget.table.expense.AddExpenseTableController;
 import ru.msvdev.homefinance.widget.table.expense.ExpenseRowModel;
-import ru.msvdev.homefinance.window.MainAppStage;
-import ru.msvdev.homefinance.window.SceneLoader;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -26,11 +27,11 @@ import java.util.ResourceBundle;
 
 @Controller
 @RequiredArgsConstructor
-public class AddExpensesUtilityController implements Initializable, ShowUtilityWindow {
+public class AddExpensesUtilityController implements Initializable, ShowUtilityWindow, CloseWindowEventListener {
 
     private static final String STATISTIC_LABEL_TEMPLATE = "Добавлено %d записей на сумму %s рублей";
 
-    private final MainAppStage mainAppStage;
+    private final PrimaryStage primaryStage;
     private final SceneLoader sceneLoader;
     private final TaskBuilder taskBuilder;
 
@@ -67,7 +68,7 @@ public class AddExpensesUtilityController implements Initializable, ShowUtilityW
         Scene scene = sceneLoader.load("/view/utility/add-expenses-utility-view.fxml");
 
         stage = new Stage(StageStyle.UTILITY);
-        stage.initOwner(mainAppStage.getStage());
+        stage.initOwner(primaryStage.getStage());
         stage.setTitle("Добавление расходов");
         stage.setScene(scene);
 
@@ -97,5 +98,13 @@ public class AddExpensesUtilityController implements Initializable, ShowUtilityW
 
     private void updateStatisticLabel(Integer count, BigDecimal cost) {
         statistic.setText(String.format(STATISTIC_LABEL_TEMPLATE, count, cost));
+    }
+
+    @Override
+    public void closeWindowEvent() {
+        if (stage != null) {
+            stage.close();
+            stage = null;
+        }
     }
 }

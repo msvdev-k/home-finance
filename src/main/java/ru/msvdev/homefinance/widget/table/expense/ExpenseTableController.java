@@ -3,17 +3,18 @@ package ru.msvdev.homefinance.widget.table.expense;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import lombok.Setter;
+import ru.msvdev.desktop.utils.task.TaskBuilder;
+import ru.msvdev.desktop.utils.widget.datatable.AbstractTableController;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.BooleanCellModel;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.DateCellModel;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.MoneyCellModel;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.StringCellModel;
 import ru.msvdev.homefinance.data.entity.CategoryEntity;
 import ru.msvdev.homefinance.data.entity.ExpenseEntity;
 import ru.msvdev.homefinance.task.data.category.FindAllCategoriesTaskBuilder;
 import ru.msvdev.homefinance.task.data.expense.DeleteAllExpensesByIdTaskBuilder;
 import ru.msvdev.homefinance.task.data.expense.FindAllExpensesTaskBuilder;
-import ru.msvdev.homefinance.task.operation.TaskBuilder;
-import ru.msvdev.homefinance.viewutils.table.TableController;
-import ru.msvdev.homefinance.viewutils.table.cell.BooleanCellModel;
-import ru.msvdev.homefinance.viewutils.table.cell.DateCellModel;
-import ru.msvdev.homefinance.viewutils.table.cell.MoneyCellModel;
-import ru.msvdev.homefinance.viewutils.table.cell.StringCellModel;
 import ru.msvdev.homefinance.widget.table.expense.columnbuilder.*;
 
 import java.math.BigDecimal;
@@ -25,9 +26,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 
-public class ExpenseTableController extends TableController<ExpenseRowModel, Integer> {
+public class ExpenseTableController extends AbstractTableController<ExpenseRowModel, Integer> {
 
     private final Map<String, CategoryEntity> categoryEntityMap = new ConcurrentHashMap<>();
+    @Setter
     private BiConsumer<Integer, BigDecimal> statisticListener;
 
 
@@ -114,6 +116,11 @@ public class ExpenseTableController extends TableController<ExpenseRowModel, Int
                         entity.getState() != null && entity.getState() == ExpenseEntity.State.APPROVED
                 );
 
+                if (entity.getNote() != null) {
+                    rowModel.noteProperty().get().setValue(entity.getNote());
+                    rowModel.noteProperty().get().resetError();
+                }
+
                 rows.put(entity.getId(), rowModel);
 
                 items.add(rowModel);
@@ -155,10 +162,6 @@ public class ExpenseTableController extends TableController<ExpenseRowModel, Int
 
         builder.addSucceededListener(deleteRowsListener);
         builder.buildAndRun();
-    }
-
-    public void setStatisticListener(BiConsumer<Integer, BigDecimal> statisticListener) {
-        this.statisticListener = statisticListener;
     }
 
     private void updateStatistic() {

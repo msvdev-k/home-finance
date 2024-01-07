@@ -1,10 +1,9 @@
 package ru.msvdev.homefinance.data.service;
 
 import lombok.NonNull;
-import org.springframework.data.repository.core.support.RepositoryFactorySupport;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.msvdev.homefinance.data.db.RepositoryFactoryUpdateListener;
 import ru.msvdev.homefinance.data.entity.ExpenseEntity;
 import ru.msvdev.homefinance.data.exception.NotFoundException;
 import ru.msvdev.homefinance.data.repository.ExpenseRepository;
@@ -15,9 +14,10 @@ import java.util.Optional;
 
 
 @Service
-public class ExpenseService implements RepositoryFactoryUpdateListener {
+@RequiredArgsConstructor
+public class ExpenseService {
 
-    private ExpenseRepository expenseRepository;
+    private final ExpenseRepository expenseRepository;
 
 
     @Transactional(readOnly = true)
@@ -62,9 +62,4 @@ public class ExpenseService implements RepositoryFactoryUpdateListener {
         expenseRepository.deleteAllById(idCollection);
     }
 
-
-    @Override
-    public void repositoryFactoryUpdate(RepositoryFactorySupport repositoryFactorySupport) {
-        expenseRepository = repositoryFactorySupport.getRepository(ExpenseRepository.class);
-    }
 }

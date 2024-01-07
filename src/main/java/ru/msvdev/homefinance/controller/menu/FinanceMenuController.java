@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import ru.msvdev.homefinance.controller.DataAccessListener;
 import ru.msvdev.homefinance.controller.utility.category.CategoryUtilityController;
 import ru.msvdev.homefinance.controller.utility.expenses.AddExpensesUtilityController;
 import ru.msvdev.homefinance.controller.utility.expenses.ExpensesUtilityController;
@@ -15,8 +14,7 @@ import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
-public class FinanceMenuController implements DataAccessListener {
-
+public class FinanceMenuController {
 
     private final CategoryUtilityController categoryUtilityController;
     private final AddExpensesUtilityController addExpensesUtilityController;
@@ -24,12 +22,6 @@ public class FinanceMenuController implements DataAccessListener {
 
     @FXML
     private Menu financeMenu;
-
-
-    @Override
-    public void dataAccessUpdate(boolean access) {
-        financeMenu.setVisible(access);
-    }
 
 
     @FXML

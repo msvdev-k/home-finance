@@ -2,12 +2,12 @@ package ru.msvdev.homefinance.widget.table.category;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
+import ru.msvdev.desktop.utils.task.TaskBuilder;
+import ru.msvdev.desktop.utils.widget.datatable.AbstractTableController;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.StringCellModel;
 import ru.msvdev.homefinance.data.entity.CategoryEntity;
 import ru.msvdev.homefinance.task.data.category.DeleteCategoryByIdTaskBuilder;
 import ru.msvdev.homefinance.task.data.category.FindAllCategoriesTaskBuilder;
-import ru.msvdev.homefinance.task.operation.TaskBuilder;
-import ru.msvdev.homefinance.viewutils.table.TableController;
-import ru.msvdev.homefinance.viewutils.table.cell.StringCellModel;
 import ru.msvdev.homefinance.widget.table.category.columnbuilder.CategoryColumnBuilder;
 import ru.msvdev.homefinance.widget.table.category.columnbuilder.DescriptionColumnBuilder;
 import ru.msvdev.homefinance.widget.table.category.columnbuilder.IdColumnBuilder;
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 
-public class CategoryTableController extends TableController<CategoryRowModel, Integer> {
+public class CategoryTableController extends AbstractTableController<CategoryRowModel, Integer> {
 
     private TableColumn<CategoryRowModel, StringCellModel> categoryColumn;
     private final Set<String> categories = ConcurrentHashMap.newKeySet();

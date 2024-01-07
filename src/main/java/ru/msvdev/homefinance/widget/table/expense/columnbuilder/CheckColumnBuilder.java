@@ -1,11 +1,12 @@
 package ru.msvdev.homefinance.widget.table.expense.columnbuilder;
 
-import ru.msvdev.homefinance.viewutils.table.BaseColumnBuilder;
-import ru.msvdev.homefinance.viewutils.table.cell.BooleanCellModel;
-import ru.msvdev.homefinance.viewutils.table.converter.BooleanStringConverter;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import ru.msvdev.desktop.utils.widget.datatable.BaseColumnBuilder;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.BooleanCellModel;
+import ru.msvdev.desktop.utils.widget.datatable.cell.table.BooleanTableCell;
 import ru.msvdev.homefinance.widget.table.expense.ExpenseRowModel;
-import ru.msvdev.homefinance.widget.table.expense.editevent.CheckEditEvent;
-import ru.msvdev.homefinance.widget.table.expense.valuefactory.CheckCellValueFactory;
 
 
 public class CheckColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, BooleanCellModel> {
@@ -14,8 +15,20 @@ public class CheckColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, Boole
         setName("Проверено");
         setPrefWidth(90);
         setEditable(false);
-        setCellValueFactory(new CheckCellValueFactory());
-        setConverter(new BooleanStringConverter());
-        setEditEvent(new CheckEditEvent());
+    }
+
+    @Override
+    protected void modelValueSetter(ExpenseRowModel expenseRowModel, BooleanCellModel booleanCellModel) {
+        expenseRowModel.setCheck(booleanCellModel.getValue());
+    }
+
+    @Override
+    protected ObservableValue<BooleanCellModel> cellValueFactory(TableColumn.CellDataFeatures<ExpenseRowModel, BooleanCellModel> cellDataFeatures) {
+        return cellDataFeatures.getValue().checkProperty();
+    }
+
+    @Override
+    protected TableCell<ExpenseRowModel, BooleanCellModel> cellFactory(TableColumn<ExpenseRowModel, BooleanCellModel> tableColumn) {
+        return new BooleanTableCell<>();
     }
 }

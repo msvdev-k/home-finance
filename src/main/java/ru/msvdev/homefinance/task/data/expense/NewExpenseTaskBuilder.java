@@ -2,26 +2,22 @@ package ru.msvdev.homefinance.task.data.expense;
 
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
+import ru.msvdev.desktop.utils.task.DataTaskBase;
+import ru.msvdev.desktop.utils.task.TaskCancel;
 import ru.msvdev.homefinance.data.entity.CategoryEntity;
 import ru.msvdev.homefinance.data.entity.ExpenseEntity;
-import ru.msvdev.homefinance.task.base.task.DataTaskBase;
-import ru.msvdev.homefinance.task.operation.TaskCancel;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
+@Setter
 public class NewExpenseTaskBuilder extends BaseExpenseTaskBuilder<ExpenseEntity> {
 
-    @Setter
     private LocalDate date;
-    @Setter
     private CategoryEntity category;
-    @Setter
     private BigDecimal cost;
-    @Setter
     private ExpenseEntity.State state;
-    @Setter
     private String note;
 
 

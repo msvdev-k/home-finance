@@ -8,19 +8,21 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import ru.msvdev.desktop.utils.event.emitter.CloseWindowEventEmitter;
+import ru.msvdev.desktop.utils.event.emitter.DataAccessEventEmitter;
+import ru.msvdev.desktop.utils.scene.SceneSwitcher;
+import ru.msvdev.desktop.utils.task.TaskBuilder;
+import ru.msvdev.desktop.utils.scene.PrimaryStage;
 import ru.msvdev.homefinance.config.AppProperty;
-import ru.msvdev.homefinance.controller.DataAccessListener;
-import ru.msvdev.homefinance.controller.ShowUtilityWindow;
-import ru.msvdev.homefinance.task.data.file.CloseFileTaskBuilder;
-import ru.msvdev.homefinance.task.data.file.OpenFileTaskBuilder;
-import ru.msvdev.homefinance.task.data.io.csv.ExportToCsvTaskBuilder;
-import ru.msvdev.homefinance.task.data.io.csv.ImportFromCsvTaskBuilder;
-import ru.msvdev.homefinance.task.data.io.xhb.ImportFromXhbTaskBuilder;
-import ru.msvdev.homefinance.task.operation.TaskBuilder;
-import ru.msvdev.homefinance.window.MainAppStage;
+import ru.msvdev.homefinance.scene.CloseFileApplicationScene;
+import ru.msvdev.homefinance.scene.OpenFileApplicationScene;
+import ru.msvdev.homefinance.task.file.CloseFileTaskBuilder;
+import ru.msvdev.homefinance.task.file.OpenFileTaskBuilder;
+import ru.msvdev.homefinance.task.io.csv.ExportToCsvTaskBuilder;
+import ru.msvdev.homefinance.task.io.csv.ImportFromCsvTaskBuilder;
+import ru.msvdev.homefinance.task.io.xhb.ImportFromXhbTaskBuilder;
 
 import java.io.File;
-import java.util.List;
 import java.util.Locale;
 
 
@@ -28,13 +30,15 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class FileMenuController {
 
-    private final MainAppStage mainAppStage;
+    private final PrimaryStage primaryStage;
+    private final SceneSwitcher sceneSwitcher;
     private final TaskBuilder taskBuilder;
 
     private final AppProperty appProperty;
 
-    private final List<DataAccessListener> dataAccessListeners;
-    private final List<ShowUtilityWindow> showUtilityWindows;
+    private final DataAccessEventEmitter dataAccessEventEmitter;
+    private final CloseWindowEventEmitter closeWindowEventEmitter;
+
 
     @FXML
     private MenuItem newMenuItem;
@@ -59,8 +63,8 @@ public class FileMenuController {
         );
 
         File file = newFile ?
-                fileChooser.showSaveDialog(mainAppStage.getStage()) :
-                fileChooser.showOpenDialog(mainAppStage.getStage());
+                fileChooser.showSaveDialog(primaryStage.getStage()) :
+                fileChooser.showOpenDialog(primaryStage.getStage());
 
         if (file != null) {
             OpenFileTaskBuilder builder = taskBuilder.getBuilder(OpenFileTaskBuilder.class);
@@ -77,7 +81,7 @@ public class FileMenuController {
 
 
     private void setCursorWait(boolean wait) {
-        mainAppStage
+        primaryStage
                 .getStage()
                 .getScene()
                 .setCursor(wait ? Cursor.WAIT : Cursor.DEFAULT);
@@ -89,15 +93,21 @@ public class FileMenuController {
      * @param open true - файл открыт, false - файл закрыт
      */
     private void updateOpenFile(boolean open) {
+        if (open) {
+            sceneSwitcher.switchSceneTo(OpenFileApplicationScene.class);
+            dataAccessEventEmitter.fileOpenEmin();
+
+        } else {
+            sceneSwitcher.switchSceneTo(CloseFileApplicationScene.class);
+            closeWindowEventEmitter.closeWindowEvent();
+            dataAccessEventEmitter.fileCloseEmit();
+        }
+
         newMenuItem.setDisable(open);
         openMenuItem.setDisable(open);
         closeMenuItem.setDisable(!open);
         importCsvMenuItem.setDisable(!open);
         exportCsvMenuItem.setDisable(!open);
-
-        if (!open) showUtilityWindows.forEach(ShowUtilityWindow::close);
-        dataAccessListeners.forEach(listener ->
-                listener.dataAccessUpdate(open));
     }
 
 
@@ -129,7 +139,7 @@ public class FileMenuController {
                 new FileChooser.ExtensionFilter("Файлы Home Bank (*.xhb)", "*.xhb")
         );
 
-        File file = fileChooser.showOpenDialog(mainAppStage.getStage());
+        File file = fileChooser.showOpenDialog(primaryStage.getStage());
 
         if (file != null) {
             String fileName = file.getName().toLowerCase(Locale.ROOT);
@@ -155,7 +165,7 @@ public class FileMenuController {
                 new FileChooser.ExtensionFilter("Файлы CSV (*.csv)", "*.csv")
         );
 
-        File file = fileChooser.showSaveDialog(mainAppStage.getStage());
+        File file = fileChooser.showSaveDialog(primaryStage.getStage());
 
         if (file != null) {
             ExportToCsvTaskBuilder builder = taskBuilder.getBuilder(ExportToCsvTaskBuilder.class);
@@ -169,5 +179,4 @@ public class FileMenuController {
     public void exitAction(ActionEvent actionEvent) {
         Platform.exit();
     }
-
 }

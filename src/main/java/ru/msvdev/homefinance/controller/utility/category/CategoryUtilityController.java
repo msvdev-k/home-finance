@@ -10,12 +10,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import ru.msvdev.desktop.utils.event.listener.CloseWindowEventListener;
+import ru.msvdev.desktop.utils.task.TaskBuilder;
+import ru.msvdev.desktop.utils.scene.PrimaryStage;
+import ru.msvdev.desktop.utils.scene.SceneLoader;
 import ru.msvdev.homefinance.controller.ShowUtilityWindow;
 import ru.msvdev.homefinance.widget.table.category.CategoryRowModel;
 import ru.msvdev.homefinance.widget.table.category.CategoryTableController;
-import ru.msvdev.homefinance.task.operation.TaskBuilder;
-import ru.msvdev.homefinance.window.MainAppStage;
-import ru.msvdev.homefinance.window.SceneLoader;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,9 +25,9 @@ import java.util.ResourceBundle;
 
 @Controller
 @RequiredArgsConstructor
-public class CategoryUtilityController implements Initializable, ShowUtilityWindow {
+public class CategoryUtilityController implements Initializable, ShowUtilityWindow, CloseWindowEventListener {
 
-    private final MainAppStage mainAppStage;
+    private final PrimaryStage primaryStage;
     private final SceneLoader sceneLoader;
     private final TaskBuilder taskBuilder;
 
@@ -59,7 +60,7 @@ public class CategoryUtilityController implements Initializable, ShowUtilityWind
         Scene scene = sceneLoader.load("/view/utility/category-utility-view.fxml");
 
         stage = new Stage(StageStyle.UTILITY);
-        stage.initOwner(mainAppStage.getStage());
+        stage.initOwner(primaryStage.getStage());
         stage.setTitle("Управление категориями расходов");
         stage.setScene(scene);
 
@@ -83,5 +84,13 @@ public class CategoryUtilityController implements Initializable, ShowUtilityWind
     @FXML
     public void deleteItem(ActionEvent actionEvent) {
         tableController.removeSelected();
+    }
+
+    @Override
+    public void closeWindowEvent() {
+        if (stage != null) {
+            stage.close();
+            stage = null;
+        }
     }
 }

@@ -2,12 +2,13 @@ package ru.msvdev.homefinance.widget.table.category;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import lombok.Setter;
+import ru.msvdev.desktop.utils.widget.datatable.RowModel;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.CellModel;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.StringCellModel;
 import ru.msvdev.homefinance.data.entity.CategoryEntity;
 import ru.msvdev.homefinance.task.data.category.NewCategoryTaskBuilder;
 import ru.msvdev.homefinance.task.data.category.UpdateCategoryTaskBuilder;
-import ru.msvdev.homefinance.viewutils.table.cell.CellModel;
-import ru.msvdev.homefinance.viewutils.table.cell.StringCellModel;
-import ru.msvdev.homefinance.viewutils.table.RowModel;
 
 import java.util.Objects;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 public class CategoryRowModel extends RowModel<CategoryRowModel, Integer> {
 
+    @Setter
     private Set<String> categories;
 
     private final ObjectProperty<StringCellModel> category;
@@ -41,11 +43,6 @@ public class CategoryRowModel extends RowModel<CategoryRowModel, Integer> {
         categoryRowModel.description.set(new StringCellModel());
 
         return categoryRowModel;
-    }
-
-
-    public void setCategories(Set<String> categories) {
-        this.categories = categories;
     }
 
 

@@ -2,13 +2,13 @@ package ru.msvdev.homefinance.task.data.category;
 
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
-import ru.msvdev.homefinance.task.base.task.DataTaskBase;
-import ru.msvdev.homefinance.task.operation.TaskCancel;
+import ru.msvdev.desktop.utils.task.DataTaskBase;
+import ru.msvdev.desktop.utils.task.TaskCancel;
 
 
+@Setter
 public class DeleteCategoryByIdTaskBuilder extends BaseCategoryTaskBuilder<Void> {
 
-    @Setter
     private Integer id;
 
 

@@ -1,9 +1,9 @@
 package ru.msvdev.homefinance.task.data.expense;
 
 import org.springframework.context.ApplicationContext;
+import ru.msvdev.desktop.utils.task.DataTaskBase;
+import ru.msvdev.desktop.utils.task.TaskCancel;
 import ru.msvdev.homefinance.data.entity.ExpenseEntity;
-import ru.msvdev.homefinance.task.base.task.DataTaskBase;
-import ru.msvdev.homefinance.task.operation.TaskCancel;
 
 import java.util.List;
 

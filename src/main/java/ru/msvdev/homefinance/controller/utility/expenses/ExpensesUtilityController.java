@@ -9,12 +9,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import ru.msvdev.desktop.utils.event.listener.CloseWindowEventListener;
+import ru.msvdev.desktop.utils.task.TaskBuilder;
+import ru.msvdev.desktop.utils.scene.PrimaryStage;
+import ru.msvdev.desktop.utils.scene.SceneLoader;
 import ru.msvdev.homefinance.controller.ShowUtilityWindow;
-import ru.msvdev.homefinance.task.operation.TaskBuilder;
 import ru.msvdev.homefinance.widget.table.expense.ExpenseRowModel;
 import ru.msvdev.homefinance.widget.table.expense.ExpenseTableController;
-import ru.msvdev.homefinance.window.MainAppStage;
-import ru.msvdev.homefinance.window.SceneLoader;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -25,11 +26,11 @@ import java.util.ResourceBundle;
 
 @Controller
 @RequiredArgsConstructor
-public class ExpensesUtilityController implements Initializable, ShowUtilityWindow {
+public class ExpensesUtilityController implements Initializable, ShowUtilityWindow, CloseWindowEventListener {
 
     private static final String STATISTIC_LABEL_TEMPLATE = "Выделено %d записей на сумму %.2f рублей";
 
-    private final MainAppStage mainAppStage;
+    private final PrimaryStage primaryStage;
     private final SceneLoader sceneLoader;
     private final TaskBuilder taskBuilder;
 
@@ -64,7 +65,7 @@ public class ExpensesUtilityController implements Initializable, ShowUtilityWind
         Scene scene = sceneLoader.load("/view/utility/expenses-utility-view.fxml");
 
         stage = new Stage(StageStyle.UTILITY);
-        stage.initOwner(mainAppStage.getStage());
+        stage.initOwner(primaryStage.getStage());
         stage.setTitle("Список расходов");
         stage.setScene(scene);
 
@@ -104,5 +105,13 @@ public class ExpensesUtilityController implements Initializable, ShowUtilityWind
 
     private void updateStatisticLabel(Integer count, BigDecimal cost) {
         statistic.setText(String.format(STATISTIC_LABEL_TEMPLATE, count, cost));
+    }
+
+    @Override
+    public void closeWindowEvent() {
+        if (stage != null) {
+            stage.close();
+            stage = null;
+        }
     }
 }

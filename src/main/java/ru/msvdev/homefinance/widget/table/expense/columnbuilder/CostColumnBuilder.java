@@ -1,11 +1,12 @@
 package ru.msvdev.homefinance.widget.table.expense.columnbuilder;
 
-import ru.msvdev.homefinance.viewutils.table.BaseColumnBuilder;
-import ru.msvdev.homefinance.viewutils.table.cell.MoneyCellModel;
-import ru.msvdev.homefinance.viewutils.table.converter.MoneyStringConverter;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import ru.msvdev.desktop.utils.widget.datatable.BaseColumnBuilder;
+import ru.msvdev.desktop.utils.widget.datatable.cell.model.MoneyCellModel;
+import ru.msvdev.desktop.utils.widget.datatable.cell.table.MoneyTableCell;
 import ru.msvdev.homefinance.widget.table.expense.ExpenseRowModel;
-import ru.msvdev.homefinance.widget.table.expense.editevent.CostEditEvent;
-import ru.msvdev.homefinance.widget.table.expense.valuefactory.CostCellValueFactory;
 
 
 public class CostColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, MoneyCellModel> {
@@ -14,8 +15,20 @@ public class CostColumnBuilder extends BaseColumnBuilder<ExpenseRowModel, MoneyC
         setName("Стоимость");
         setPrefWidth(90);
         setEditable(true);
-        setCellValueFactory(new CostCellValueFactory());
-        setConverter(new MoneyStringConverter());
-        setEditEvent(new CostEditEvent());
+    }
+
+    @Override
+    protected void modelValueSetter(ExpenseRowModel expenseRowModel, MoneyCellModel moneyCellModel) {
+        expenseRowModel.setCost(moneyCellModel.getValue());
+    }
+
+    @Override
+    protected ObservableValue<MoneyCellModel> cellValueFactory(TableColumn.CellDataFeatures<ExpenseRowModel, MoneyCellModel> cellDataFeatures) {
+        return cellDataFeatures.getValue().costProperty();
+    }
+
+    @Override
+    protected TableCell<ExpenseRowModel, MoneyCellModel> cellFactory(TableColumn<ExpenseRowModel, MoneyCellModel> tableColumn) {
+        return new MoneyTableCell<>();
     }
 }

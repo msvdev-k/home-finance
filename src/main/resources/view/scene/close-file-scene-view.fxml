@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            prefHeight="200.0" prefWidth="350.0">
+    <top>
+        <MenuBar>
+            <fx:include source="../menu/file-menu.fxml"/>
+            <fx:include source="../menu/help-menu.fxml"/>
+        </MenuBar>
+    </top>
+
+    <center>
+        <Label>Необходимо открыть файл</Label>
+    </center>
+
+</BorderPane>

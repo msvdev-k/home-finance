@@ -1,14 +1,13 @@
 package ru.msvdev.homefinance.data.service;
 
 import lombok.NonNull;
-import org.springframework.data.repository.core.support.RepositoryFactorySupport;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.msvdev.homefinance.data.db.RepositoryFactoryUpdateListener;
+import ru.msvdev.desktop.utils.task.TaskException;
 import ru.msvdev.homefinance.data.entity.CategoryEntity;
 import ru.msvdev.homefinance.data.exception.NotFoundException;
 import ru.msvdev.homefinance.data.repository.CategoryRepository;
-import ru.msvdev.homefinance.task.base.TaskException;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,9 +15,10 @@ import java.util.Optional;
 
 
 @Service
-public class CategoryService implements RepositoryFactoryUpdateListener {
+@RequiredArgsConstructor
+public class CategoryService {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
 
     @Transactional(readOnly = true)
@@ -70,9 +70,4 @@ public class CategoryService implements RepositoryFactoryUpdateListener {
         }
     }
 
-
-    @Override
-    public void repositoryFactoryUpdate(RepositoryFactorySupport repositoryFactorySupport) {
-        categoryRepository = repositoryFactorySupport.getRepository(CategoryRepository.class);
-    }
 }

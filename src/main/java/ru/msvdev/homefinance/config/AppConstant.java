@@ -1,6 +1,8 @@
 package ru.msvdev.homefinance.config;
 
-public class AppConstant {
+import ru.msvdev.desktop.utils.config.Constants;
+
+public class AppConstant extends Constants {
 
     public static final String LOGGER_NAME = "ru.msvdev.homefinance";
 
