@@ -57,7 +57,7 @@ public class PropertyItem<T> implements PropertySheet.Item {
 
     @Override
     public void setValue(Object newValue) {
-        if (Objects.equals(value.get(), newValue)) return;
+        if (newValue == null || Objects.equals(value.get(), newValue)) return;
 
         value.set(type.cast(newValue));
 
