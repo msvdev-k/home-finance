@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import ru.msvdev.homefinance.controller.utility.category.CategoryUtilityController;
 import ru.msvdev.homefinance.controller.utility.expenses.AddExpensesUtilityController;
 import ru.msvdev.homefinance.controller.utility.expenses.ExpensesUtilityController;
+import ru.msvdev.homefinance.controller.utility.statistic.simple.SimpleStatisticController;
 
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ public class FinanceMenuController {
     private final CategoryUtilityController categoryUtilityController;
     private final AddExpensesUtilityController addExpensesUtilityController;
     private final ExpensesUtilityController expensesUtilityController;
+    private final SimpleStatisticController simpleStatisticController;
 
     @FXML
     private Menu financeMenu;
@@ -34,8 +36,8 @@ public class FinanceMenuController {
         expensesUtilityController.show();
     }
 
-    public void statisticsAction(ActionEvent actionEvent) {
-
+    public void updateStatisticsAction(ActionEvent actionEvent) {
+        simpleStatisticController.updateStatistics();
     }
 
     public void categoryManagementAction(ActionEvent actionEvent) throws IOException {

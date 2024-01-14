@@ -12,7 +12,7 @@
 
     <SeparatorMenuItem/>
 
-    <MenuItem text="Статистика..." onAction="#statisticsAction"/>
+    <MenuItem text="Обновить статистику" onAction="#updateStatisticsAction"/>
 
     <SeparatorMenuItem/>
 

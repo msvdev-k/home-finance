@@ -6,7 +6,7 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="ru.msvdev.homefinance.controller.MainAppController"
-            prefHeight="600.0" prefWidth="384.0">
+            prefHeight="600.0" prefWidth="800.0">
     <top>
         <MenuBar>
             <fx:include source="../menu/file-menu.fxml"/>
@@ -16,7 +16,7 @@
     </top>
 
     <center>
-        <fx:include source="center-app-view.fxml" VBox.vgrow="ALWAYS"/>
+        <fx:include source="../utility/base-statistic-utility-view.fxml" VBox.vgrow="ALWAYS"/>
     </center>
 
 </BorderPane>

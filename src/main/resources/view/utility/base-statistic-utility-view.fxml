@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.controlsfx.control.PropertySheet?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ru.msvdev.homefinance.controller.utility.statistic.simple.SimpleStatisticController"
+      prefHeight="600.0"
+      prefWidth="800.0"
+      spacing="5.0">
+
+    <HBox spacing="5.0" VBox.vgrow="ALWAYS">
+        <PropertySheet fx:id="categoryPropertySheet"/>
+        <TableView fx:id="statisticTable" HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
+</VBox>
